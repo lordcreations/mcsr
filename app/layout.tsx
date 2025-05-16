@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import { Fira_Mono, Fira_Code } from "next/font/google";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const firaSans = Fira_Mono({
   variable: "--font-fira-sans",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "700"],
-});
-const firaCode = Fira_Code({
-  variable: "--font-fira-code",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -23,7 +18,7 @@ export const metadata: Metadata = {
     icon: "/image.png",
     shortcut: "/image.png",
     apple: "/apple-touch-icon.png",
-  }
+  },
 };
 
 export default function RootLayout({
@@ -31,18 +26,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (    <html lang="en">
-
+  return (
+    <html lang="en">
       <head>
-        <SpeedInsights/>
         <link
           href="https://fonts.cdnfonts.com/css/minecraft-4"
           rel="stylesheet"
         />
       </head>
       <body className={`${firaSans.variable} ${firaSans.variable} antialiased`}>
+        <SpeedInsights />
+        <Analytics />
         {children}
-      </body> 
+      </body>
     </html>
   );
 }
