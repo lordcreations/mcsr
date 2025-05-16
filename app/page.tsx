@@ -206,7 +206,7 @@ export default function Home() {
                         } as React.CSSProperties
                       }
                     >
-                      <div className="pb-1 pt-2 text-md font-chat text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border tracking-normal leading-none text-center">
+                      <div className="pb-1 pt-4 text-md font-chat text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border tracking-normal leading-none text-center">
                         {player.nickname}
                       </div>
                       <div className="relative w-20 h-20">
@@ -275,54 +275,67 @@ export default function Home() {
 
               <div className="max-h-[400px] overflow-y-auto pr-1">
                 <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
-                  {filteredPlayers.map((player) => (
-                    <li
-                      key={player.uuid}
-                      onClick={() => {
-                        setSelectedPlayer(player);
-                        setDialogOpen(true);
-                      }}
-                      className="flex items-center gap-3 py-3 justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded px-2"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="w-8 text-center font-bold text-gray-500 dark:text-gray-400">
-                          {player.seasonResult.eloRank}
-                        </span>
-                        <Image
-                          src={`/api/player-head?uuid=${player.uuid}`}
-                          alt={player.nickname}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10"
-                          loading="lazy"
-                          onLoad={() => setLoadedImages((prev) => prev + 1)}
-                          style={{ transition: "transform 0.2s" }}
-                          onMouseOver={(e) =>
-                            (e.currentTarget.style.transform = "scale(1.05)")
-                          }
-                          onMouseOut={(e) =>
-                            (e.currentTarget.style.transform = "scale(1)")
-                          }
-                        />
-                        <div className="flex items-center gap-2 font-chat text-base leading-none">
-                          <span className="shadow-none text-black dark:text-white tracking-wide">
-                            {player.nickname}
-                          </span>
-                          <Image
-                            src={`/flags/${player.country}.svg`}
-                            alt={`${player.country.toUpperCase()} Flag`}
-                            width={20}
-                            height={20}
-                            className="h-[1.25rem] w-auto object-contain align-middle"
-                            loading="lazy"
-                          />
-                        </div>
-                      </div>
-                      <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
-                        {player.seasonResult.eloRate}
-                      </span>
-                    </li>
-                  ))}
+<ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
+  {filteredPlayers.map((player) => (
+    <li
+      key={player.uuid}
+      onClick={() => {
+        setSelectedPlayer(player);
+        setDialogOpen(true);
+      }}
+      className="flex items-center justify-between gap-3 py-3 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+    >
+      <div className="flex items-center gap-3">
+        {/* Rank */}
+        <span className="w-8 text-center font-bold text-gray-500 dark:text-gray-400">
+          {player.seasonResult.eloRank}
+        </span>
+
+        {/* Head + Nickname wrapper */}
+        <div className="flex items-center gap-2">
+          {/* Avatar */}
+          <Image
+            src={`/api/player-head?uuid=${player.uuid}`}
+            alt={player.nickname}
+            width={40}
+            height={40}
+            className="w-10 h-10 shrink-0"
+            loading="lazy"
+            onLoad={() => setLoadedImages((prev) => prev + 1)}
+            style={{ transition: "transform 0.2s" }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.transform = "scale(1)")
+            }
+          />
+
+          {/* Nickname */}
+<span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem]">
+            {player.nickname}
+          </span>
+
+          {/* Optional flag */}
+          {/* <Image
+            src={`/flags/${player.country}.svg`}
+            alt={`${player.country.toUpperCase()} Flag`}
+            width={20}
+            height={20}
+            className="h-[1.25rem] w-auto object-contain"
+            loading="lazy"
+          /> */}
+        </div>
+      </div>
+
+      {/* Elo */}
+      <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
+        {player.seasonResult.eloRate}
+      </span>
+    </li>
+  ))}
+</ul>
+
                 </ul>
               </div>
             </div>

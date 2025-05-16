@@ -47,20 +47,20 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg w-full dark:bg-gray-900 bg-white text-black dark:text-white font-chat border border-gray-300 dark:border-gray-700 shadow-lg bg-[url('/textures/stone.png')] bg-repeat">
+      <DialogContent className="max-w-lg w-full dark:bg-gray-900 bg-white text-black dark:text-white font-minecraft border border-gray-300 dark:border-gray-700 shadow-lg bg-[url('/textures/stone.png')] bg-repeat">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl mb-1 font-minecraft uppercase">
             {player?.nickname}
           </DialogTitle>
-          <p className="text-sm text-center text-gray-400 font-chat">
+          <p className="text-sm text-center text-gray-400 font-minecraft">
             UUID: {player?.uuid}
           </p>
         </DialogHeader>
 
-        {loading && <p className="text-center mt-4 font-chat">Loading...</p>}
+        {loading && <p className="text-center mt-4 font-minecraft">Loading...</p>}
 
         {data && (
-          <Tabs defaultValue="overview" className="w-full mt-4 font-chat">
+          <Tabs defaultValue="overview" className="w-full mt-4 font-minecraft">
             <TabsList className="flex justify-center gap-2 mb-4 font-minecraft text-lg">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
@@ -90,11 +90,11 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
                     { icon: "📉", label: "Lowest Elo", value: data?.data?.seasonResult?.lowest ?? "N/A" },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start justify-between">
-                      <div className="flex gap-2">
-                        <span>{item.icon}</span>
-                        <span className="opacity-90">{item.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{item.icon}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{item.label}</span>
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300">{item.value}</span>
+                      <span className="text-sm font-chat font-semibold mt-2">{item.value}</span>
                     </div>
                   ))}
                 </div>

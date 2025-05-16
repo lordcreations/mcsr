@@ -1,17 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@font-face {
-  font-family: 'Minecraft';
-  src: url('/fonts/Minecraftia-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-
-.font-chat {
-  font-family: 'Minecraft', sans-serif;
-}
 
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
@@ -77,6 +66,19 @@
     /* color: #FFFF55; */
     /* text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); */
     transform: scale(1.05);
+}
+
+
+@font-face {
+  font-family: 'Minecraftia';
+  src: url('/fonts/Minecraftia-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.font-chat {
+  font-family: 'Minecraftia', sans-serif;
 }
 
 
