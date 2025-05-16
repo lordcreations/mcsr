@@ -191,7 +191,7 @@ export default function Home() {
                         {player.nickname}
                       </div>
                       <Image
-                        src={`https://starlightskins.lunareclipse.studio/render/head/${player.uuid}/full`}
+                        src={`/api/player-head?uuid=${player.uuid}`}
                         alt={`Top ${index + 1}`}
                         width={80}
                         height={80}
@@ -269,7 +269,7 @@ export default function Home() {
                           {player.seasonResult.eloRank}
                         </span>
                         <Image
-                          src={`https://starlightskins.lunareclipse.studio/render/head/${player.uuid}/full`}
+                          src={`/api/player-head?uuid=${player.uuid}`}
                           alt={player.nickname}
                           width={40}
                           height={40}
