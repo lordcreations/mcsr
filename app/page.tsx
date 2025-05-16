@@ -102,9 +102,10 @@ export default function Home() {
       )}
 
       {fullyLoaded && (
-        <main className="transition-all duration-500 flex items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#f7f7f8] to-[#e3e4e6] dark:from-[#0f172a] dark:to-[#1e293b] text-black dark:text-white animate-fade-in">
-          <div className="flex flex-col items-center justify-center w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-            <div className="flex justify-between items-start w-full">
+        <main className="w-full px-2 sm:px-4 transition-all duration-500 flex items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#f7f7f8] to-[#e3e4e6] dark:from-[#0f172a] dark:to-[#1e293b] text-black dark:text-white animate-fade-in">
+          <div className="px-3 sm:px-6 flex flex-col items-center justify-center w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+            <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-4">
+
               <div className="flex flex-col items-start leading-none">
                 <p className="text-sm font-minecraft text-gray-500 dark:text-gray-400 mb-1 tracking-wide">
                   ARE YOU A RUNNER?
@@ -148,12 +149,13 @@ export default function Home() {
                   BRAZIL
                 </span>
               </div>
-              <h1 className="pb-2 font-minecraft text-white dark:text-black text-4xl bg-gray-900 dark:bg-white rounded shadow w-fit h-[60px] flex items-center justify-center px-6 leading-none">
+              <h1 className="font-minecraft  sm:text-4xl pb-2 font-minecraft text-white dark:text-black text-4xl bg-gray-900 dark:bg-white rounded shadow w-fit h-[60px] flex items-center justify-center px-6 leading-none">
                 LEADERBOARD
               </h1>
             </div>
 
-            <div className="flex items-end justify-center w-full gap-6 mb-12">
+            <div className="flex flex-wrap items-end justify-center w-full gap-4 sm:gap-6 mb-12">
+
               {players.slice(0, 3).map((player, index) => {
                 const ranks = [
                   {
@@ -230,7 +232,7 @@ export default function Home() {
             </div>
 
             <div className="w-full max-h-[500px] overflow-hidden">
-              <div className="flex items-center justify-between mb-3 px-1 gap-2">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 px-1 gap-2">
                 <h2 className="text-2xl font-minecraft px-4 py-1 bg-gray-900 dark:bg-white text-white dark:text-black rounded shadow whitespace-nowrap">
                   OTHER PLAYERS
                 </h2>
@@ -248,7 +250,7 @@ export default function Home() {
                     placeholder="Search..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded text-sm font-sans outline-none focus:ring-2 focus:ring-gray-500"
+                    className="w-full pl-8 pr-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded text-sm font-sans outline-none focus:ring-2 focus:ring-gray-500 relative sm:w-[220px]"
                   />
                 </div>
               </div>

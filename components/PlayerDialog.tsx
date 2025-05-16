@@ -110,7 +110,7 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
           className="flex items-center gap-1 text-purple-400 hover:underline"
         >
           <Image src="/icons/twitch.svg" alt="Twitch" width={18} height={18} />
-          @{data.data.connections.twitch.name}
+          {data.data.connections.twitch.name}
         </a>
       )}
       {data.data.connections?.discord && (
