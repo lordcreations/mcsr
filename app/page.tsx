@@ -19,26 +19,25 @@ export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [loadedImages, setLoadedImages] = useState(0);
-useEffect(() => {
-  console.log("MICROSOFT CLIENT ID:", process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID);
-}, []);
 
+  const fullyLoaded = true;
 
-  const totalImages = players.length + 3; // 3 for the top players
-  const fullyLoaded = true
+  const filteredPlayers = players
+    .slice(3)
+    .filter((player) =>
+      player.nickname.toLowerCase().includes(search.toLowerCase())
+    );
 
-  const filteredPlayers = players.slice(3).filter((player) =>
-    player.nickname.toLowerCase().includes(search.toLowerCase())
-  );
-
-    const loginWithMicrosoft = () => {
+  const loginWithMicrosoft = () => {
     const clientId = process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
 
     const redirectUri = "http://localhost:3000/api/auth/callback";
     const scope = "XboxLive.signin offline_access";
     const responseType = "code";
 
-    const authUrl = `https://login.live.com/oauth20_authorize.srf?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}`;
+    const authUrl = `https://login.live.com/oauth20_authorize.srf?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(
+      scope
+    )}`;
     window.location.href = authUrl;
   };
 
@@ -61,7 +60,10 @@ useEffect(() => {
       .then((data) => {
         const sorted = (data.data?.users || [])
           .filter((u: Player) => u.seasonResult)
-          .sort((a: Player, b: Player) => a.seasonResult.eloRank - b.seasonResult.eloRank);
+          .sort(
+            (a: Player, b: Player) =>
+              a.seasonResult.eloRank - b.seasonResult.eloRank
+          );
         setPlayers(sorted);
         setLoading(false);
       });
@@ -78,7 +80,9 @@ useEffect(() => {
   if (!mounted) return null;
 
   return (
-    <div className={`${darkMode ? "dark" : ""} w-full transition-all duration-500`}>
+    <div
+      className={`${darkMode ? "dark" : ""} w-full transition-all duration-500`}
+    >
       {(loading || !fullyLoaded) && (
         <div className="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center transition-opacity duration-500 space-y-42">
           <Image
@@ -97,30 +101,28 @@ useEffect(() => {
       {fullyLoaded && (
         <main className="transition-all duration-500 flex items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#f7f7f8] to-[#e3e4e6] dark:from-[#0f172a] dark:to-[#1e293b] text-black dark:text-white animate-fade-in">
           <div className="flex flex-col items-center justify-center w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-<div className="flex justify-between items-start w-full">
-  {/* Left side: "Are you a runner?" + Edit button */}
-  <div className="flex flex-col items-start leading-none">
-    <p className="text-sm font-minecraft text-gray-500 dark:text-gray-400 mb-1 tracking-wide">
-      ARE YOU A RUNNER?
-    </p>
-    <button
-      onClick={loginWithMicrosoft}
-      className="px-4 py-2 text-sm font-minecraft rounded border border-blue-500 bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-950 dark:text-white dark:border-blue-400 transition-all"
-    >
-      EDIT YOUR PROFILE
-    </button>
-  </div>
+            <div className="flex justify-between items-start w-full">
+              <div className="flex flex-col items-start leading-none">
+                <p className="text-sm font-minecraft text-gray-500 dark:text-gray-400 mb-1 tracking-wide">
+                  ARE YOU A RUNNER?
+                </p>
+                <button
+                  // onClick={loginWithMicrosoft}
+                  disabled
+                  className="px-4 py-2 text-sm font-minecraft rounded border border-blue-500 bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-950 dark:text-white dark:border-blue-400 transition-all"
+                >
+                  EDIT YOUR PROFILE
+                </button>
+              </div>
 
-  {/* Right side: Dark mode icon button */}
-  <button
-    onClick={toggleDarkMode}
-    className="p-2 mt-2 rounded border border-gray-400 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 text-black dark:text-white text-xl"
-    title={darkMode ? 'Light Mode' : 'Dark Mode'}
-  >
-    {darkMode ? '☀' : '🌙'}
-  </button>
-</div>
-
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 mt-2 rounded border border-gray-400 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 text-black dark:text-white text-xl"
+                title={darkMode ? "Light Mode" : "Dark Mode"}
+              >
+                {darkMode ? "☀" : "🌙"}
+              </button>
+            </div>
 
             <div className="mb-25">
               <div className="flex items-center justify-center mb-4">
@@ -151,14 +153,32 @@ useEffect(() => {
             <div className="flex items-end justify-center w-full gap-6 mb-12">
               {players.slice(0, 3).map((player, index) => {
                 const ranks = [
-                  { lift: "-translate-y-4", height: "h-16", color: "from-yellow-300 via-yellow-400 to-yellow-500", shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]" },
-                  { lift: "translate-y-[-0.2rem]", height: "h-12", color: "from-gray-200 via-gray-300 to-gray-400", shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]" },
-                  { lift: "translate-y-0", height: "h-10", color: "from-amber-700 via-amber-600 to-amber-500", shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]" },
+                  {
+                    lift: "-translate-y-4",
+                    height: "h-16",
+                    color: "from-yellow-300 via-yellow-400 to-yellow-500",
+                    shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]",
+                  },
+                  {
+                    lift: "translate-y-[-0.2rem]",
+                    height: "h-12",
+                    color: "from-gray-200 via-gray-300 to-gray-400",
+                    shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]",
+                  },
+                  {
+                    lift: "translate-y-0",
+                    height: "h-10",
+                    color: "from-amber-700 via-amber-600 to-amber-500",
+                    shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]",
+                  },
                 ];
                 const { lift, height, color, shadow } = ranks[index];
 
                 return (
-                  <div key={player.uuid} className={`w-36 ${height} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative`}>
+                  <div
+                    key={player.uuid}
+                    className={`w-36 ${height} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative`}
+                  >
                     <div className={`flex flex-col items-center mb-1 ${lift}`}>
                       <div className="pb-2 text-md font-minecraft text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border uppercase tracking-normal leading-none text-center">
                         {player.nickname}
@@ -175,8 +195,12 @@ useEffect(() => {
                           transition: "transform 0.2s",
                           filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                         }}
-                        onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                        onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                        onMouseOver={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.05)")
+                        }
+                        onMouseOut={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
                         unoptimized
                       />
                       <div className="mt-1 flex items-center justify-center">
@@ -225,24 +249,30 @@ useEffect(() => {
               <div className="max-h-[400px] overflow-y-auto pr-1">
                 <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
                   {filteredPlayers.map((player) => (
-                    <li key={player.uuid} className="flex items-center gap-3 py-3 justify-between">
+                    <li
+                      key={player.uuid}
+                      className="flex items-center gap-3 py-3 justify-between"
+                    >
                       <div className="flex items-center gap-3">
                         <span className="w-8 text-center font-bold text-gray-500 dark:text-gray-400">
                           {player.seasonResult.eloRank}
                         </span>
-                          <Image
-                            src={`https://starlightskins.lunareclipse.studio/render/head/${player.uuid}/full`}
-                            alt={player.nickname}
-                            width={40}
-                            height={40}
-                            className="w-10 h-10"
-                            loading="lazy"
-                            // priority={index < 10} // preload first 10 heads
-                            onLoad={() => setLoadedImages((prev) => prev + 1)}
-                            style={{ transition: "transform 0.2s" }}
-                            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                          />
+                        <Image
+                          src={`https://starlightskins.lunareclipse.studio/render/head/${player.uuid}/full`}
+                          alt={player.nickname}
+                          width={40}
+                          height={40}
+                          className="w-10 h-10"
+                          loading="lazy"
+                          onLoad={() => setLoadedImages((prev) => prev + 1)}
+                          style={{ transition: "transform 0.2s" }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.05)")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                        />
                         <div className="flex items-center gap-2 font-minecraft uppercase text-base leading-none">
                           <span className="shadow-none text-black dark:text-white">
                             {player.nickname}
