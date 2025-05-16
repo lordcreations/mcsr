@@ -242,7 +242,8 @@ export default function Home() {
                     alt="Search"
                     width={16}
                     height={16}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
+
                     loading="lazy"
                   />
                   <input
