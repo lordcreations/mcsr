@@ -1,11 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@font-face {
-  font-family: 'Minecraft';
-  font-style: normal;
-  font-weight: 400;
-  src: url('https://fonts.cdnfonts.com/s/36662/MinecraftTen-VGORe.woff') format('woff');
-}
 
 @font-face {
   font-family: 'Minecraft';
@@ -44,19 +38,35 @@
   border: 2px solid #0f172a;
 }
 
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate {
+  animation: float 3s ease-in-out infinite;
+}
+
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @font-face {
-    font-family: 'Minecraft';
+    font-family: 'Minecraft2';
     font-style: normal;
     font-weight: 400;
     src: url('/fonts/MinecraftTen-VGORe.woff') format('woff');
 }
 
 .font-minecraft {
-    font-family: 'Minecraft', monospace !important;
+    font-family: 'Minecraft2', monospace !important;
     letter-spacing: 0.05em;
     /* text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3); */
     image-rendering: pixelated;

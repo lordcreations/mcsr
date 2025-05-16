@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import PlayerDialog from "@/components/PlayerDialog";
 
@@ -11,7 +11,10 @@ type Player = {
     eloRank: number;
     eloRate: number;
   };
+  animationPhase?: number; // 🎯 not animation delay visually — just a phase offset
 };
+
+
 
 export default function Home() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -22,7 +25,6 @@ export default function Home() {
   const [loadedImages, setLoadedImages] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-
   const fullyLoaded = true;
 
   const filteredPlayers = players
@@ -57,20 +59,25 @@ export default function Home() {
     }
   }, [mounted]);
 
-  useEffect(() => {
-    fetch("https://mcsrranked.com/api/leaderboard?country=br")
-      .then((res) => res.json())
-      .then((data) => {
-        const sorted = (data.data?.users || [])
-          .filter((u: Player) => u.seasonResult)
-          .sort(
-            (a: Player, b: Player) =>
-              a.seasonResult.eloRank - b.seasonResult.eloRank
-          );
-        setPlayers(sorted);
-        setLoading(false);
-      });
-  }, []);
+useEffect(() => {
+  fetch("https://mcsrranked.com/api/leaderboard?country=br")
+    .then((res) => res.json())
+    .then((data) => {
+      const sorted = (data.data?.users || [])
+        .filter((u: Player) => u.seasonResult)
+        .sort(
+          (a: Player, b: Player) =>
+            a.seasonResult.eloRank - b.seasonResult.eloRank
+        )
+        .map((player: any) => ({
+          ...player,
+          animationPhase: Math.random() * -3, 
+        }));
+      setPlayers(sorted);
+      setLoading(false);
+    });
+}, []);
+
 
   const toggleDarkMode = () => {
     setDarkMode((prev) => {
@@ -105,7 +112,6 @@ export default function Home() {
         <main className="w-full px-2 sm:px-4 transition-all duration-500 flex items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#f7f7f8] to-[#e3e4e6] dark:from-[#0f172a] dark:to-[#1e293b] text-black dark:text-white animate-fade-in">
           <div className="px-3 sm:px-6 flex flex-col items-center justify-center w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-4">
-
               <div className="flex flex-col items-start leading-none">
                 <p className="text-sm font-minecraft text-gray-500 dark:text-gray-400 mb-1 tracking-wide">
                   ARE YOU A RUNNER?
@@ -154,93 +160,91 @@ export default function Home() {
               </h1>
             </div>
 
-<div className="grid grid-cols-3 gap-2 sm:flex flex-wrap items-end justify-center w-full sm:gap-6 mb-12">
-  {players.slice(0, 3).map((player, index) => {
-    const ranks = [
-      {
-        lift: "-translate-y-4",
-        height: "h-16",
-        color: "from-yellow-300 via-yellow-400 to-yellow-500",
-        shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]",
-        order: "col-start-2 sm:order-1",
-        zIndex: "z-20",
-      },
-      {
-        lift: "translate-y-[-0.2rem]",
-        height: "h-12",
-        color: "from-gray-200 via-gray-300 to-gray-400",
-        shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]",
-        order: "col-start-1 sm:order-0",
-        zIndex: "z-10",
-      },
-      {
-        lift: "translate-y-0",
-        height: "h-10",
-        color: "from-amber-700 via-amber-600 to-amber-500",
-        shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]",
-        order: "col-start-3 sm:order-2",
-        zIndex: "z-0",
-      },
-    ];
+            <div className="grid grid-cols-3 gap-2 sm:flex flex-wrap items-end justify-center w-full sm:gap-6 mb-12">
+{players.slice(0, 3).map((player, index) => {
+  const ranks = [
+    {
+      lift: "-translate-y-4",
+      height: "h-16",
+      color: "from-yellow-300 via-yellow-400 to-yellow-500",
+      shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]",
+      order: "col-start-2 sm:order-1",
+      zIndex: "z-20",
+    },
+    {
+      lift: "translate-y-[-0.2rem]",
+      height: "h-12",
+      color: "from-gray-200 via-gray-300 to-gray-400",
+      shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]",
+      order: "col-start-1 sm:order-0",
+      zIndex: "z-10",
+    },
+    {
+      lift: "translate-y-0",
+      height: "h-10",
+      color: "from-amber-700 via-amber-600 to-amber-500",
+      shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]",
+      order: "col-start-3 sm:order-2",
+      zIndex: "z-0",
+    },
+  ];
 
-    const { lift, height, color, shadow, order, zIndex } = ranks[index];
+  const { lift, height, color, shadow, order, zIndex } = ranks[index];
 
-    return (
+  return (
+    <div
+      key={player.uuid}
+      onClick={() => {
+        setSelectedPlayer(player);
+        setDialogOpen(true);
+      }}
+      className={`cursor-pointer w-28 sm:w-36 ${height} ${order} ${zIndex} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative hover:brightness-110 transition duration-200`}
+    >
       <div
-        key={player.uuid}
-        onClick={() => {
-          setSelectedPlayer(player);
-          setDialogOpen(true);
-        }}
-        className={`cursor-pointer w-28 sm:w-36 ${height} ${order} ${zIndex} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative hover:brightness-110 transition duration-200`}
+        className={`flex flex-col items-center mb-1 ${lift} animate`}
+        style={{
+          animationDelay: `${player.animationPhase}s`,
+        } as React.CSSProperties}
       >
-        <div className={`flex flex-col items-center mb-1 ${lift}`}>
-          <div className="pb-2 text-md font-minecraft text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border uppercase tracking-normal leading-none text-center">
-            {player.nickname}
-          </div>
+        <div className="pb-1 pt-2 text-md font-chat text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border tracking-normal leading-none text-center">
+          {player.nickname}
+        </div>
+        <div className="relative w-20 h-20">
+          <div className="absolute inset-0 bg-gray-300 dark:bg-gray-700 animate-pulse rounded" />
           <Image
             src={`/api/player-head?uuid=${player.uuid}`}
             alt={`Top ${index + 1}`}
             width={80}
             height={80}
-            className="w-20 h-20"
-            onLoad={() => setLoadedImages((prev) => prev + 1)}
-            loading="lazy"
+            className="w-20 h-20 relative z-10"
+            priority={index < 3}
+            onLoad={(e) => {
+              setLoadedImages((prev) => prev + 1);
+              const placeholder = e.currentTarget.parentElement?.querySelector("div");
+              if (placeholder) placeholder.style.display = "none";
+            }}
             style={{
               transition: "transform 0.2s",
               filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
             }}
-            onMouseOver={(e) =>
-              (e.currentTarget.style.transform = "scale(1.05)")
-            }
-            onMouseOut={(e) =>
-              (e.currentTarget.style.transform = "scale(1)")
-            }
+            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             unoptimized
           />
-          <div className="mt-1 flex items-center justify-center">
-            <Image
-              src={`/flags/${player.country}.svg`}
-              alt={`${player.country.toUpperCase()} Flag`}
-              width={20}
-              height={20}
-              className="h-[1.25rem] w-auto object-contain align-middle shadow"
-              loading="lazy"
-            />
-          </div>
         </div>
-        <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
-          {player.seasonResult.eloRate}
-        </span>
       </div>
-    );
-  })}
-</div>
+      <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow pt-2">
+        {player.seasonResult.eloRate}
+      </span>
+    </div>
+  );
+})}
 
+            </div>
 
             <div className="w-full max-h-[500px] overflow-hidden">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 px-1 gap-2">
-                <h2 className="text-2xl font-minecraft px-4 py-1 bg-gray-900 dark:bg-white text-white dark:text-black rounded shadow whitespace-nowrap">
+                <h2 className="text-2xl font-minecraft px-4 py-1 bg-gray-900 dark:bg-white text-white dark:text-black rounded shadow whitespace-nowrap pb-2">
                   OTHER PLAYERS
                 </h2>
                 <div className="relative w-[220px]">
@@ -250,7 +254,6 @@ export default function Home() {
                     width={16}
                     height={16}
                     className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
-
                     loading="lazy"
                   />
                   <input
@@ -294,8 +297,8 @@ export default function Home() {
                             (e.currentTarget.style.transform = "scale(1)")
                           }
                         />
-                        <div className="flex items-center gap-2 font-minecraft uppercase text-base leading-none">
-                          <span className="shadow-none text-black dark:text-white">
+                        <div className="flex items-center gap-2 font-chat text-base leading-none">
+                          <span className="shadow-none text-black dark:text-white tracking-wide">
                             {player.nickname}
                           </span>
                           <Image
