@@ -223,7 +223,7 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-sm px-2 py-1 rounded shadow">
+                    <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
                       {player.seasonResult.eloRate}
                     </span>
                   </div>
@@ -300,7 +300,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-sm px-2 py-1 rounded shadow">
+                      <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
                         {player.seasonResult.eloRate}
                       </span>
                     </li>
