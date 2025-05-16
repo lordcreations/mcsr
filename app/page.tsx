@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import PlayerDialog from "@/components/PlayerDialog";
 
 type Player = {
   uuid: string;
@@ -19,6 +20,8 @@ export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [loadedImages, setLoadedImages] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
   const fullyLoaded = true;
 
@@ -177,7 +180,11 @@ export default function Home() {
                 return (
                   <div
                     key={player.uuid}
-                    className={`w-36 ${height} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative`}
+                    onClick={() => {
+                      setSelectedPlayer(player);
+                      setDialogOpen(true);
+                    }}
+                    className={`cursor-pointer w-36 ${height} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative hover:brightness-110 transition duration-200`}
                   >
                     <div className={`flex flex-col items-center mb-1 ${lift}`}>
                       <div className="pb-2 text-md font-minecraft text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border uppercase tracking-normal leading-none text-center">
@@ -251,7 +258,11 @@ export default function Home() {
                   {filteredPlayers.map((player) => (
                     <li
                       key={player.uuid}
-                      className="flex items-center gap-3 py-3 justify-between"
+                      onClick={() => {
+                        setSelectedPlayer(player);
+                        setDialogOpen(true);
+                      }}
+                      className="flex items-center gap-3 py-3 justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded px-2"
                     >
                       <div className="flex items-center gap-3">
                         <span className="w-8 text-center font-bold text-gray-500 dark:text-gray-400">
@@ -296,6 +307,11 @@ export default function Home() {
               </div>
             </div>
           </div>
+          <PlayerDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            player={selectedPlayer}
+          />
         </main>
       )}
     </div>

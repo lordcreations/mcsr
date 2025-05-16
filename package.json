@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-slot": "^1.2.2",
+    "@radix-ui/react-tabs": "^1.1.11",
     "@types/react-simple-maps": "^3.0.6",
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
