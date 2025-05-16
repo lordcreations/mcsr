@@ -275,49 +275,50 @@ export default function Home() {
 
               <div className="max-h-[400px] overflow-y-auto pr-1">
                 <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
-<ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
-  {filteredPlayers.map((player) => (
-    <li
-      key={player.uuid}
-      onClick={() => {
-        setSelectedPlayer(player);
-        setDialogOpen(true);
-      }}
-      className="flex items-center justify-between gap-3 py-3 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-    >
-      <div className="flex items-center gap-3">
-        {/* Rank */}
-        <span className="w-8 text-center font-bold text-gray-500 dark:text-gray-400">
-          {player.seasonResult.eloRank}
-        </span>
+                  <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
+                    {filteredPlayers.map((player) => (
+                      <li
+                        key={player.uuid}
+                        onClick={() => {
+                          setSelectedPlayer(player);
+                          setDialogOpen(true);
+                        }}
+                        className="flex items-center justify-between gap-3 py-3 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                      >
+                        <div className="flex items-center gap-3">
+                          {/* Rank */}
+                          <span className="font-chat mt-4 text-sm w-8 text-center font-bold text-gray-500 dark:text-gray-400">
+                            {player.seasonResult.eloRank}
+                          </span>
 
-        {/* Head + Nickname wrapper */}
-        <div className="flex items-center gap-2">
-          {/* Avatar */}
-          <Image
-            src={`/api/player-head?uuid=${player.uuid}`}
-            alt={player.nickname}
-            width={40}
-            height={40}
-            className="w-10 h-10 shrink-0"
-            loading="lazy"
-            onLoad={() => setLoadedImages((prev) => prev + 1)}
-            style={{ transition: "transform 0.2s" }}
-            onMouseOver={(e) =>
-              (e.currentTarget.style.transform = "scale(1.05)")
-            }
-            onMouseOut={(e) =>
-              (e.currentTarget.style.transform = "scale(1)")
-            }
-          />
+                          {/* Head + Nickname wrapper */}
+                          <div className="flex items-center gap-2">
+                            {/* Avatar */}
+                            <Image
+                              src={`/api/player-head?uuid=${player.uuid}`}
+                              alt={player.nickname}
+                              width={40}
+                              height={40}
+                              className="w-10 h-10 shrink-0"
+                              loading="lazy"
+                              onLoad={() => setLoadedImages((prev) => prev + 1)}
+                              style={{ transition: "transform 0.2s" }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.05)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            />
 
-          {/* Nickname */}
-<span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem]">
-            {player.nickname}
-          </span>
+                            {/* Nickname */}
+                            <span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem]">
+                              {player.nickname}
+                            </span>
 
-          {/* Optional flag */}
-          {/* <Image
+                            {/* Optional flag */}
+                            {/* <Image
             src={`/flags/${player.country}.svg`}
             alt={`${player.country.toUpperCase()} Flag`}
             width={20}
@@ -325,17 +326,16 @@ export default function Home() {
             className="h-[1.25rem] w-auto object-contain"
             loading="lazy"
           /> */}
-        </div>
-      </div>
+                          </div>
+                        </div>
 
-      {/* Elo */}
-      <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
-        {player.seasonResult.eloRate}
-      </span>
-    </li>
-  ))}
-</ul>
-
+                        {/* Elo */}
+                        <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow pt-3">
+                          {player.seasonResult.eloRate}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </ul>
               </div>
             </div>
