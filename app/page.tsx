@@ -1,0 +1,273 @@
+"use client";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
+type Player = {
+  uuid: string;
+  nickname: string;
+  country: string;
+  seasonResult: {
+    eloRank: number;
+    eloRate: number;
+  };
+};
+
+export default function Home() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [loadedImages, setLoadedImages] = useState(0);
+useEffect(() => {
+  console.log("MICROSOFT CLIENT ID:", process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID);
+}, []);
+
+
+  const totalImages = players.length + 3; // 3 for the top players
+  const fullyLoaded = true
+
+  const filteredPlayers = players.slice(3).filter((player) =>
+    player.nickname.toLowerCase().includes(search.toLowerCase())
+  );
+
+    const loginWithMicrosoft = () => {
+    const clientId = process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
+
+    const redirectUri = "http://localhost:3000/api/auth/callback";
+    const scope = "XboxLive.signin offline_access";
+    const responseType = "code";
+
+    const authUrl = `https://login.live.com/oauth20_authorize.srf?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}`;
+    window.location.href = authUrl;
+  };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      const storedTheme = localStorage.getItem("theme");
+      if (storedTheme === "dark") {
+        setDarkMode(true);
+      }
+    }
+  }, [mounted]);
+
+  useEffect(() => {
+    fetch("https://mcsrranked.com/api/leaderboard?country=br")
+      .then((res) => res.json())
+      .then((data) => {
+        const sorted = (data.data?.users || [])
+          .filter((u: Player) => u.seasonResult)
+          .sort((a: Player, b: Player) => a.seasonResult.eloRank - b.seasonResult.eloRank);
+        setPlayers(sorted);
+        setLoading(false);
+      });
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("theme", newMode ? "dark" : "light");
+      return newMode;
+    });
+  };
+
+  if (!mounted) return null;
+
+  return (
+    <div className={`${darkMode ? "dark" : ""} w-full transition-all duration-500`}>
+      {(loading || !fullyLoaded) && (
+        <div className="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center transition-opacity duration-500 space-y-42">
+          <Image
+            src="/image.png"
+            alt="Loading"
+            width={96}
+            height={128}
+            loading="lazy"
+            className="w-24 h-32 animate-pulse"
+            style={{ imageRendering: "pixelated" }}
+            unoptimized
+          />
+        </div>
+      )}
+
+      {fullyLoaded && (
+        <main className="transition-all duration-500 flex items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#f7f7f8] to-[#e3e4e6] dark:from-[#0f172a] dark:to-[#1e293b] text-black dark:text-white animate-fade-in">
+          <div className="flex flex-col items-center justify-center w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+<div className="flex justify-between items-start w-full">
+  {/* Left side: "Are you a runner?" + Edit button */}
+  <div className="flex flex-col items-start leading-none">
+    <p className="text-sm font-minecraft text-gray-500 dark:text-gray-400 mb-1 tracking-wide">
+      ARE YOU A RUNNER?
+    </p>
+    <button
+      onClick={loginWithMicrosoft}
+      className="px-4 py-2 text-sm font-minecraft rounded border border-blue-500 bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-950 dark:text-white dark:border-blue-400 transition-all"
+    >
+      EDIT YOUR PROFILE
+    </button>
+  </div>
+
+  {/* Right side: Dark mode icon button */}
+  <button
+    onClick={toggleDarkMode}
+    className="p-2 mt-2 rounded border border-gray-400 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 text-black dark:text-white text-xl"
+    title={darkMode ? 'Light Mode' : 'Dark Mode'}
+  >
+    {darkMode ? '☀' : '🌙'}
+  </button>
+</div>
+
+
+            <div className="mb-25">
+              <div className="flex items-center justify-center mb-4">
+                <Image
+                  src="/flags/br.svg"
+                  alt="BR Flag"
+                  width={40}
+                  height={40}
+                  className="h-[2.5rem] w-auto object-contain align-middle shadow"
+                  loading="lazy"
+                />
+                <span
+                  className="text-2xl font-minecraft text-gray-900 dark:text-white ml-2"
+                  style={{
+                    textShadow: darkMode
+                      ? "2px 2px 0 rgba(255, 255, 255, 0.3)"
+                      : "2px 2px 0 rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  BRAZIL
+                </span>
+              </div>
+              <h1 className="pb-2 font-minecraft text-white dark:text-black text-4xl bg-gray-900 dark:bg-white rounded shadow w-fit h-[60px] flex items-center justify-center px-6 leading-none">
+                LEADERBOARD
+              </h1>
+            </div>
+
+            <div className="flex items-end justify-center w-full gap-6 mb-12">
+              {players.slice(0, 3).map((player, index) => {
+                const ranks = [
+                  { lift: "-translate-y-4", height: "h-16", color: "from-yellow-300 via-yellow-400 to-yellow-500", shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]" },
+                  { lift: "translate-y-[-0.2rem]", height: "h-12", color: "from-gray-200 via-gray-300 to-gray-400", shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]" },
+                  { lift: "translate-y-0", height: "h-10", color: "from-amber-700 via-amber-600 to-amber-500", shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]" },
+                ];
+                const { lift, height, color, shadow } = ranks[index];
+
+                return (
+                  <div key={player.uuid} className={`w-36 ${height} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative`}>
+                    <div className={`flex flex-col items-center mb-1 ${lift}`}>
+                      <div className="pb-2 text-md font-minecraft text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border uppercase tracking-normal leading-none text-center">
+                        {player.nickname}
+                      </div>
+                      <Image
+                        src={`https://starlightskins.lunareclipse.studio/render/head/${player.uuid}/full`}
+                        alt={`Top ${index + 1}`}
+                        width={80}
+                        height={80}
+                        className="w-20 h-20"
+                        onLoad={() => setLoadedImages((prev) => prev + 1)}
+                        loading="lazy"
+                        style={{
+                          transition: "transform 0.2s",
+                          filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                        }}
+                        onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                        onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                        unoptimized
+                      />
+                      <div className="mt-1 flex items-center justify-center">
+                        <Image
+                          src={`/flags/${player.country}.svg`}
+                          alt={`${player.country.toUpperCase()} Flag`}
+                          width={20}
+                          height={20}
+                          className="h-[1.25rem] w-auto object-contain align-middle shadow"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                    <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-sm px-2 py-1 rounded shadow">
+                      {player.seasonResult.eloRate}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="w-full max-h-[500px] overflow-hidden">
+              <div className="flex items-center justify-between mb-3 px-1 gap-2">
+                <h2 className="text-2xl font-minecraft px-4 py-1 bg-gray-900 dark:bg-white text-white dark:text-black rounded shadow whitespace-nowrap">
+                  OTHER PLAYERS
+                </h2>
+                <div className="relative w-[220px]">
+                  <Image
+                    src="/spyglass.webp"
+                    alt="Search"
+                    width={16}
+                    height={16}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                    loading="lazy"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded text-sm font-sans outline-none focus:ring-2 focus:ring-gray-500"
+                  />
+                </div>
+              </div>
+
+              <div className="max-h-[400px] overflow-y-auto pr-1">
+                <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
+                  {filteredPlayers.map((player) => (
+                    <li key={player.uuid} className="flex items-center gap-3 py-3 justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="w-8 text-center font-bold text-gray-500 dark:text-gray-400">
+                          {player.seasonResult.eloRank}
+                        </span>
+                          <Image
+                            src={`https://starlightskins.lunareclipse.studio/render/head/${player.uuid}/full`}
+                            alt={player.nickname}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10"
+                            loading="lazy"
+                            // priority={index < 10} // preload first 10 heads
+                            onLoad={() => setLoadedImages((prev) => prev + 1)}
+                            style={{ transition: "transform 0.2s" }}
+                            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                          />
+                        <div className="flex items-center gap-2 font-minecraft uppercase text-base leading-none">
+                          <span className="shadow-none text-black dark:text-white">
+                            {player.nickname}
+                          </span>
+                          <Image
+                            src={`/flags/${player.country}.svg`}
+                            alt={`${player.country.toUpperCase()} Flag`}
+                            width={20}
+                            height={20}
+                            className="h-[1.25rem] w-auto object-contain align-middle"
+                            loading="lazy"
+                          />
+                        </div>
+                      </div>
+                      <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-sm px-2 py-1 rounded shadow">
+                        {player.seasonResult.eloRate}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </main>
+      )}
+    </div>
+  );
+}
