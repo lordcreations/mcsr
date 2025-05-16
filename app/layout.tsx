@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fira_Mono, Fira_Code } from "next/font/google";
 import "./globals.css";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const firaSans = Fira_Mono({
   variable: "--font-fira-sans",
@@ -31,19 +31,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
+  return (    <html lang="en">
+
       <head>
+        <SpeedInsights/>
         <link
           href="https://fonts.cdnfonts.com/css/minecraft-4"
           rel="stylesheet"
         />
       </head>
-      <body
-        className={`${firaSans.variable} ${firaSans.variable} antialiased`}
-      >
+      <body className={`${firaSans.variable} ${firaSans.variable} antialiased`}>
         {children}
-      </body>
+      </body> 
     </html>
   );
 }
