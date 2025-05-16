@@ -154,82 +154,89 @@ export default function Home() {
               </h1>
             </div>
 
-            <div className="flex flex-wrap items-end justify-center w-full gap-4 sm:gap-6 mb-12">
+<div className="grid grid-cols-3 gap-2 sm:flex flex-wrap items-end justify-center w-full sm:gap-6 mb-12">
+  {players.slice(0, 3).map((player, index) => {
+    const ranks = [
+      {
+        lift: "-translate-y-4",
+        height: "h-16",
+        color: "from-yellow-300 via-yellow-400 to-yellow-500",
+        shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]",
+        order: "col-start-2 sm:order-1",
+        zIndex: "z-20",
+      },
+      {
+        lift: "translate-y-[-0.2rem]",
+        height: "h-12",
+        color: "from-gray-200 via-gray-300 to-gray-400",
+        shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]",
+        order: "col-start-1 sm:order-0",
+        zIndex: "z-10",
+      },
+      {
+        lift: "translate-y-0",
+        height: "h-10",
+        color: "from-amber-700 via-amber-600 to-amber-500",
+        shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]",
+        order: "col-start-3 sm:order-2",
+        zIndex: "z-0",
+      },
+    ];
 
-              {players.slice(0, 3).map((player, index) => {
-                const ranks = [
-                  {
-                    lift: "-translate-y-4",
-                    height: "h-16",
-                    color: "from-yellow-300 via-yellow-400 to-yellow-500",
-                    shadow: "shadow-[0_4px_12px_rgba(255,255,0,0.4)]",
-                  },
-                  {
-                    lift: "translate-y-[-0.2rem]",
-                    height: "h-12",
-                    color: "from-gray-200 via-gray-300 to-gray-400",
-                    shadow: "shadow-[0_4px_12px_rgba(200,200,200,0.3)]",
-                  },
-                  {
-                    lift: "translate-y-0",
-                    height: "h-10",
-                    color: "from-amber-700 via-amber-600 to-amber-500",
-                    shadow: "shadow-[0_4px_12px_rgba(255,160,64,0.3)]",
-                  },
-                ];
-                const { lift, height, color, shadow } = ranks[index];
+    const { lift, height, color, shadow, order, zIndex } = ranks[index];
 
-                return (
-                  <div
-                    key={player.uuid}
-                    onClick={() => {
-                      setSelectedPlayer(player);
-                      setDialogOpen(true);
-                    }}
-                    className={`cursor-pointer w-36 ${height} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative hover:brightness-110 transition duration-200`}
-                  >
-                    <div className={`flex flex-col items-center mb-1 ${lift}`}>
-                      <div className="pb-2 text-md font-minecraft text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border uppercase tracking-normal leading-none text-center">
-                        {player.nickname}
-                      </div>
-                      <Image
-                        src={`/api/player-head?uuid=${player.uuid}`}
-                        alt={`Top ${index + 1}`}
-                        width={80}
-                        height={80}
-                        className="w-20 h-20"
-                        onLoad={() => setLoadedImages((prev) => prev + 1)}
-                        loading="lazy"
-                        style={{
-                          transition: "transform 0.2s",
-                          filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-                        }}
-                        onMouseOver={(e) =>
-                          (e.currentTarget.style.transform = "scale(1.05)")
-                        }
-                        onMouseOut={(e) =>
-                          (e.currentTarget.style.transform = "scale(1)")
-                        }
-                        unoptimized
-                      />
-                      <div className="mt-1 flex items-center justify-center">
-                        <Image
-                          src={`/flags/${player.country}.svg`}
-                          alt={`${player.country.toUpperCase()} Flag`}
-                          width={20}
-                          height={20}
-                          className="h-[1.25rem] w-auto object-contain align-middle shadow"
-                          loading="lazy"
-                        />
-                      </div>
-                    </div>
-                    <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
-                      {player.seasonResult.eloRate}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+    return (
+      <div
+        key={player.uuid}
+        onClick={() => {
+          setSelectedPlayer(player);
+          setDialogOpen(true);
+        }}
+        className={`cursor-pointer w-28 sm:w-36 ${height} ${order} ${zIndex} bg-gradient-to-t ${color} ${shadow} rounded-t-lg flex flex-col items-center justify-end relative hover:brightness-110 transition duration-200`}
+      >
+        <div className={`flex flex-col items-center mb-1 ${lift}`}>
+          <div className="pb-2 text-md font-minecraft text-white bg-[rgba(0,0,0,0.5)] px-3 py-1 border uppercase tracking-normal leading-none text-center">
+            {player.nickname}
+          </div>
+          <Image
+            src={`/api/player-head?uuid=${player.uuid}`}
+            alt={`Top ${index + 1}`}
+            width={80}
+            height={80}
+            className="w-20 h-20"
+            onLoad={() => setLoadedImages((prev) => prev + 1)}
+            loading="lazy"
+            style={{
+              transition: "transform 0.2s",
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.transform = "scale(1)")
+            }
+            unoptimized
+          />
+          <div className="mt-1 flex items-center justify-center">
+            <Image
+              src={`/flags/${player.country}.svg`}
+              alt={`${player.country.toUpperCase()} Flag`}
+              width={20}
+              height={20}
+              className="h-[1.25rem] w-auto object-contain align-middle shadow"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow">
+          {player.seasonResult.eloRate}
+        </span>
+      </div>
+    );
+  })}
+</div>
+
 
             <div className="w-full max-h-[500px] overflow-hidden">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 px-1 gap-2">
