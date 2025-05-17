@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 // Handle GET requests (Microsoft redirects here with code as query param)
 export async function GET(req: NextRequest) {
@@ -82,6 +83,13 @@ export async function POST(req: NextRequest) {
 // Reusable authentication logic
 async function processAuthentication(code: string, redirectUri: string) {
   try {
+    const proxy = "http://capeta1313:capeta1313@capeta1313-zone-resi-region-br.3b645d8a74515e3d.shg.na.pyproxy.io:16666";
+    const agent = new HttpsProxyAgent(proxy);
+
+    const minecraftApi = axios.create({
+    baseURL: "https://api.minecraftservices.com",
+    httpsAgent: agent,
+    });
     const clientId = process.env.MICROSOFT_CLIENT_ID || process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
     const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
 
@@ -143,25 +151,27 @@ async function processAuthentication(code: string, redirectUri: string) {
     const xstsToken = xstsResponse.data.Token;
 
     // Minecraft login
-    const mcResponse = await axios.post(
-      "https://api.minecraftservices.com/authentication/login_with_xbox",
+    const mcResponse = await minecraftApi.post(
+      "/authentication/login_with_xbox",
       {
         identityToken: `XBL3.0 x=${userHash};${xstsToken}`,
       },
-      { headers: { "Content-Type": "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
+
 
     const mcAccessToken = mcResponse.data.access_token;
 
     // Get Minecraft profile
-    const profileResponse = await axios.get(
-      "https://api.minecraftservices.com/minecraft/profile",
-      {
-        headers: {
-          Authorization: `Bearer ${mcAccessToken}`,
-        },
-      }
-    );
+const profileResponse = await minecraftApi.get("/minecraft/profile", {
+  headers: {
+    Authorization: `Bearer ${mcAccessToken}`,
+  },
+});
 
     const profileData = profileResponse.data;
 
