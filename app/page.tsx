@@ -11,7 +11,7 @@ type Player = {
     eloRank: number;
     eloRate: number;
   };
-  animationPhase?: number; // 🎯 not animation delay visually — just a phase offset
+  animationPhase?: number;
 };
 
 export default function Home() {
@@ -276,14 +276,15 @@ export default function Home() {
               <div className="max-h-[400px] overflow-y-auto pr-1">
                 <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
                   <ul className="divide-y divide-gray-300 dark:divide-gray-600 px-1">
-                    {filteredPlayers.map((player) => (
+                    {filteredPlayers.map((player, idx) => (
                       <li
                         key={player.uuid}
                         onClick={() => {
                           setSelectedPlayer(player);
                           setDialogOpen(true);
                         }}
-                        className="flex items-center justify-between gap-3 py-3 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                        className="flex items-center justify-between gap-3 py-3 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded group relative"
+                        style={{ position: "relative" }}
                       >
                         <div className="flex items-center gap-3">
                           {/* Rank */}
@@ -304,8 +305,7 @@ export default function Home() {
                               onLoad={() => setLoadedImages((prev) => prev + 1)}
                               style={{ transition: "transform 0.2s" }}
                               onMouseOver={(e) =>
-                                (e.currentTarget.style.transform =
-                                  "scale(1.05)")
+                                (e.currentTarget.style.transform = "scale(1.05)")
                               }
                               onMouseOut={(e) =>
                                 (e.currentTarget.style.transform = "scale(1)")
@@ -316,22 +316,17 @@ export default function Home() {
                             <span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem]">
                               {player.nickname}
                             </span>
-
-                            {/* Optional flag */}
-                            {/* <Image
-            src={`/flags/${player.country}.svg`}
-            alt={`${player.country.toUpperCase()} Flag`}
-            width={20}
-            height={20}
-            className="h-[1.25rem] w-auto object-contain"
-            loading="lazy"
-          /> */}
                           </div>
                         </div>
 
                         {/* Elo */}
                         <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow pt-3">
                           {player.seasonResult.eloRate}
+                        </span>
+
+                        {/* Hover text centered in the row */}
+                        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-xs px-3 py-1 rounded shadow border border-gray-300 dark:border-gray-600 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-30 tracking-wide">
+                          CLICK TO SEE DETAILS
                         </span>
                       </li>
                     ))}
