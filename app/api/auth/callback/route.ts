@@ -83,13 +83,16 @@ export async function POST(req: NextRequest) {
 // Reusable authentication logic
 async function processAuthentication(code: string, redirectUri: string) {
   try {
-    const proxy = "http://capeta1313:capeta1313@capeta1313-zone-resi-region-br.3b645d8a74515e3d.shg.na.pyproxy.io:16666";
+    const proxy = `${process.env.PROXY_URL}`;
     const agent = new HttpsProxyAgent(proxy);
 
     const minecraftApi = axios.create({
     baseURL: "https://api.minecraftservices.com",
     httpsAgent: agent,
     });
+    // request to Ipfy to test the proxy
+    const ipfyResponse = await minecraftApi.get("https://api.ipify.org?format=json");
+    console.log("IP Address:", ipfyResponse.data.ip);
     const clientId = process.env.MICROSOFT_CLIENT_ID || process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
     const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
 
