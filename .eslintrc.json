@@ -3,7 +3,7 @@
     "next/core-web-vitals",
     "next/typescript"
   ],
-  "plugins": ["unused-imports", "no-comments"],
+  "plugins": ["unused-imports"],
   "rules": {
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
@@ -14,7 +14,6 @@
         "args": "after-used",
         "argsIgnorePattern": "^_"
       }
-    ],
-    "no-comments/no-comments": "error"
+    ]
   }
 }
