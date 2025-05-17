@@ -78,7 +78,7 @@ async function processAuthentication(code: string) {
         client_secret: process.env.MICROSOFT_CLIENT_SECRET || "",
         code,
         grant_type: "authorization_code",
-        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`,
+        redirect_uri: `${window.location.origin}/api/auth/callback`,
       }),
     });
 
