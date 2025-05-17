@@ -260,7 +260,7 @@ if (match) {
                     {/* Only show flag if player has a local profile */}
                     {player.hasLocalProfile && (
                       <Image
-                        src={`/flags/${player.country.toLowerCase()}.svg`}
+                        src={`/flags/${player.country.toUpperCase()}.svg`}
                         alt={player.country}
                         width={20}
                         height={15}
