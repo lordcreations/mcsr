@@ -26,5 +26,4 @@ export const brazilStates = [
   { name: "São Paulo", code: "SP" },
   { name: "Sergipe", code: "SE" },
   { name: "Tocantins", code: "TO" },
-  { name: "Unknown", code: "unknown" }
 ];
