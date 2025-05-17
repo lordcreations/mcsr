@@ -6,7 +6,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "next-themes";
 import { Navbar } from "@/components/Navbar";
 import { MicrosoftAuthProvider } from "@/components/MicrosoftAuthProvider";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 
 const firaMono = Fira_Mono({
   variable: "--font-fira-mono",
@@ -40,13 +41,15 @@ export default function RootLayout({
       </head>
       <body className={`${firaMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <MicrosoftAuthProvider>
-            <Navbar />
-            {children}
-            <SpeedInsights />
-            <Toaster />
-            <Analytics />
-          </MicrosoftAuthProvider>
+          <Suspense fallback={<div>Loading auth...</div>}>
+            <MicrosoftAuthProvider>
+              <Navbar />
+              {children}
+              <SpeedInsights />
+              <Toaster />
+              <Analytics />
+            </MicrosoftAuthProvider>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>
