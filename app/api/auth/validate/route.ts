@@ -19,13 +19,13 @@ export const GET = async () => {
     
     // Check token expiry without making API call if possible
     // (You'd need to store token expiry info, this is just conceptual)
-    const tokenData = getTokenData(authToken);
-    if (tokenData && tokenData.exp && tokenData.exp < Date.now() / 1000) {
-      return NextResponse.json(
-        { error: "Token expired" },
-        { status: 401 }
-      );
-    }
+    // const tokenData = getTokenData(authToken);
+    // if (tokenData && tokenData.exp && tokenData.exp < Date.now() / 1000) {
+    //   return NextResponse.json(
+    //     { error: "Token expired" },
+    //     { status: 401 }
+    //   );
+    // }
 
     // Validate with Minecraft API - implement caching when possible
     const profileResponse = await fetch("https://api.minecraftservices.com/minecraft/profile", {
