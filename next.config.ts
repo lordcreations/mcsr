@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/render/head/**",
       },
+      {
+        // https://mc-heads.net
+        protocol: "https",
+        hostname: "mc-heads.net",
+        port: "",
+        pathname: "/avatar/**",
+      }
     ],
   }
 };

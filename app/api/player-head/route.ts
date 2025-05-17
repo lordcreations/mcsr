@@ -1,31 +1,45 @@
 // app/api/player-head/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const uuid = req.nextUrl.searchParams.get("uuid");
+export const runtime = "edge";
 
-  if (!uuid) {
-    return NextResponse.json({ error: "UUID is required" }, { status: 400 });
-  }
-
+export async function GET(request: NextRequest) {
   try {
-    const externalUrl = `https://starlightskins.lunareclipse.studio/render/head/${uuid}/full`;
-    const response = await fetch(externalUrl, { cache: "no-store" });
+    const url = new URL(request.url);
+    const uuid = url.searchParams.get("uuid");
 
-    if (!response.ok) {
-      return NextResponse.json({ error: "Failed to fetch image" }, { status: 502 });
+    if (!uuid) {
+      return new Response("UUID is required", { status: 400 });
     }
 
-    const buffer = await response.arrayBuffer();
+    // Use the new player head URL
+    const playerHeadUrl = `https://starlightskins.lunareclipse.studio/render/head/${uuid}/full`;
 
-    return new NextResponse(Buffer.from(buffer), {
-      status: 200,
+    const headResponse = await fetch(playerHeadUrl, {
       headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=86400", // cache 1 day
+        "User-Agent": "MCSR-Brazil-App/1.0",
+      },
+      next: {
+        revalidate: 86400, // Cache for 24 hours
       },
     });
-  } catch (err) {
-    return NextResponse.json({ error: "Proxy error" }, { status: 500 });
+
+    if (!headResponse.ok) {
+      throw new Error(`Failed to fetch player head: ${headResponse.statusText}`);
+    }
+
+    const imageData = await headResponse.arrayBuffer();
+
+    return new Response(imageData, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=86400",
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching player head:", error);
+
+    // Return a default head if there's an error
+    return NextResponse.redirect(new URL("/default-head.png", request.url));
   }
 }
