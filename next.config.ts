@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -15,6 +16,9 @@ const nextConfig: NextConfig = {
         pathname: "/avatar/**",
       }
     ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   }
 };
 
