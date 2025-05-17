@@ -1,52 +1,70 @@
 // app/api/auth/callback/route.ts
-import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
 
 // Handle GET requests (Microsoft redirects here with code as query param)
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
-    
+
     if (!code) {
-      // If no code is present, redirect to home page
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/login?error=no_code", req.url));
     }
-    
-    // Process authentication with the code
-    const authResult = await processAuthentication(code, req);
-    
-    if (authResult.success) {
-      // Redirect to home page with success
-      return NextResponse.redirect(new URL("/?login=success", req.url));
-    } else {
-      // Redirect with error
-      return NextResponse.redirect(
-        new URL(`/?error=${encodeURIComponent(authResult.error || "Unknown error")}`, req.url)
-      );
+
+    const host = req.headers.get("host") || "localhost:3000";
+    const redirectUri =
+      process.env.NODE_ENV === "production"
+        ? `https://${host}/api/auth/callback`
+        : "http://localhost:3000/api/auth/callback";
+
+    const referer = req.headers.get("referer");
+
+    const authResult = await processAuthentication(code, redirectUri);
+    if (!authResult.success) {
+      return NextResponse.redirect(new URL(`/login?error=${authResult.error}`, req.url));
     }
+
+    const { user, mcAccessToken, refreshToken } = authResult;
+
+    const response = NextResponse.redirect(referer || new URL("/", req.url));
+    const isProduction = process.env.NODE_ENV === "production";
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax', // no cast here
+  maxAge: 60 * 60 * 24 * 7,
+  path: '/',
+} as const; // ✅ ensures valid literal values for `sameSite`
+
+
+    response.cookies.set("auth_token", mcAccessToken, cookieOptions);
+    response.cookies.set("refresh_token", refreshToken, cookieOptions);
+
+    return response;
   } catch (error) {
-    console.error("Authentication error:", error);
-    return NextResponse.redirect(
-      new URL("/?error=authentication_failed", req.url)
-    );
+    console.error("Auth callback error:", error);
+    return NextResponse.redirect(new URL("/login?error=server_error", req.url));
   }
 }
 
-// Keep your existing POST handler for client-side code exchange
+// Handle POST (used client-side, if needed)
 export async function POST(req: NextRequest) {
   try {
     const { code } = await req.json();
-
     if (!code) {
-      return NextResponse.json(
-        { error: "Authorization code is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Authorization code is required" }, { status: 400 });
     }
-    
-    const authResult = await processAuthentication(code, req);
-    
+
+    const host = req.headers.get("host") || "localhost:3000";
+    const redirectUri =
+      process.env.NODE_ENV === "production"
+        ? `https://${host}/api/auth/callback`
+        : "http://localhost:3000/api/auth/callback";
+
+    const authResult = await processAuthentication(code, redirectUri);
+
     if (authResult.success) {
       return NextResponse.json({ success: true, user: authResult.user });
     } else {
@@ -57,50 +75,42 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error("Authentication error:", error);
-    return NextResponse.json(
-      { error: "Authentication failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Authentication failed" }, { status: 500 });
   }
 }
 
-// Extract the common authentication logic to a shared function
-async function processAuthentication(code: string, req: NextRequest) {
-  
-
+// Reusable authentication logic
+async function processAuthentication(code: string, redirectUri: string) {
   try {
-    // Exchange code for token
-    const tokenResponse = await fetch("https://login.live.com/oauth20_token.srf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        client_id: process.env.MICROSOFT_CLIENT_ID || "",
-        client_secret: process.env.MICROSOFT_CLIENT_SECRET || "",
-        code,
-        grant_type: "authorization_code",
-        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`,
-      }),
-    });
+    const clientId = process.env.MICROSOFT_CLIENT_ID || process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
+    const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
 
-    if (!tokenResponse.ok) {
-      const errorData = await tokenResponse.text();
-      console.error("Token exchange error:", errorData);
-      return { success: false, error: "Failed to exchange code for token", status: 500 };
+    if (!clientId || !clientSecret || !redirectUri) {
+      console.error("Missing required environment variables.");
+      return { success: false, error: "missing_env", status: 500 };
     }
 
-    const tokenData = await tokenResponse.json();
-    const { access_token, refresh_token } = tokenData;
+    const tokenResponse = await axios.post(
+      "https://login.live.com/oauth20_token.srf",
+      new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: redirectUri,
+      }),
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    );
 
-    // Get Xbox Live token
-    const xblResponse = await fetch("https://user.auth.xboxlive.com/user/authenticate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
+    const { access_token, refresh_token } = tokenResponse.data;
+    console.log("OAuth Access Token obtained");
+
+    // Xbox Live authentication
+    const xblResponse = await axios.post(
+      "https://user.auth.xboxlive.com/user/authenticate",
+      {
         Properties: {
           AuthMethod: "RPS",
           SiteName: "user.auth.xboxlive.com",
@@ -108,68 +118,53 @@ async function processAuthentication(code: string, req: NextRequest) {
         },
         RelyingParty: "http://auth.xboxlive.com",
         TokenType: "JWT",
-      }),
-    });
+      },
+      { headers: { "Content-Type": "application/json", Accept: "application/json" } }
+    );
 
-    const xblData = await xblResponse.json();
+    const xblData = xblResponse.data;
     const xblToken = xblData.Token;
     const userHash = xblData.DisplayClaims.xui[0].uhs;
 
-    // Get XSTS token
-    const xstsResponse = await fetch("https://xsts.auth.xboxlive.com/xsts/authorize", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
+    // XSTS authentication
+    const xstsResponse = await axios.post(
+      "https://xsts.auth.xboxlive.com/xsts/authorize",
+      {
         Properties: {
           SandboxId: "RETAIL",
           UserTokens: [xblToken],
         },
         RelyingParty: "rp://api.minecraftservices.com/",
         TokenType: "JWT",
-      }),
-    });
-
-    const xstsData = await xstsResponse.json();
-    const xstsToken = xstsData.Token;
-
-    // Authenticate with Minecraft
-    const mcResponse = await fetch("https://api.minecraftservices.com/authentication/login_with_xbox", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      { headers: { "Content-Type": "application/json", Accept: "application/json" } }
+    );
+
+    const xstsToken = xstsResponse.data.Token;
+
+    // Minecraft login
+    const mcResponse = await axios.post(
+      "https://api.minecraftservices.com/authentication/login_with_xbox",
+      {
         identityToken: `XBL3.0 x=${userHash};${xstsToken}`,
-      }),
-    });
-    
-    const mcData = await mcResponse.json();
-    console.log(mcData);
-    const mcAccessToken = mcData.access_token;
+      },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    const mcAccessToken = mcResponse.data.access_token;
 
     // Get Minecraft profile
-    const profileResponse = await fetch("https://api.minecraftservices.com/minecraft/profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${mcAccessToken}`,
-      },
-    });
+    const profileResponse = await axios.get(
+      "https://api.minecraftservices.com/minecraft/profile",
+      {
+        headers: {
+          Authorization: `Bearer ${mcAccessToken}`,
+        },
+      }
+    );
 
-    // If the user doesn't own Minecraft, this will fail
-    if (!profileResponse.ok) {
-      return {
-        success: false, 
-        error: "You don't own Minecraft or can't access your profile",
-        status: 403
-      };
-    }
+    const profileData = profileResponse.data;
 
-    const profileData = await profileResponse.json();
-    
-    // Store token and user data
     const user = {
       id: profileData.id,
       displayName: profileData.name,
@@ -177,33 +172,18 @@ async function processAuthentication(code: string, req: NextRequest) {
       xuid: userHash,
     };
 
-    // Create a secure token combining the minecraft token and user data
-    const authToken = mcAccessToken;
-    
-    // Set cookie for authentication
-    const cookieStore = await cookies();
-    cookieStore.set({
-      name: "auth_token",
-      value: authToken,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: "/",
-    });
-
-    // Also store refresh token securely
-    cookieStore.set({
-      name: "refresh_token",
-      value: refresh_token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      path: "/",
-    });
-
-    return { success: true, user };
-  } catch (error) {
-    console.error("Authentication error in processAuthentication:", error);
-    return { success: false, error: "Authentication processing failed" };
+    return {
+      success: true,
+      user,
+      mcAccessToken,
+      refreshToken: refresh_token,
+    };
+  } catch (error: any) {
+    console.error("Authentication error in processAuthentication:", error?.response?.data || error);
+    return {
+      success: false,
+      error: "auth_processing_failed",
+      status: 500,
+    };
   }
 }
