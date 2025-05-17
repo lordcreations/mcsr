@@ -34,7 +34,7 @@ export const GET = async () => {
         Authorization: `Bearer ${authToken}`,
       },
     });
-    
+    console.log("Profile response:", profileResponse);
     if (!profileResponse.ok) {
       // Clear invalid tokens
       const cookieStore = await cookies();
