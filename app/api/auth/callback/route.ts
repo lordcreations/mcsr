@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     }
     
     // Process authentication with the code
-    const authResult = await processAuthentication(code);
+    const authResult = await processAuthentication(code, req);
     
     if (authResult.success) {
       // Redirect to home page with success
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    const authResult = await processAuthentication(code);
+    const authResult = await processAuthentication(code, req);
     
     if (authResult.success) {
       return NextResponse.json({ success: true, user: authResult.user });
@@ -65,7 +65,8 @@ export async function POST(req: NextRequest) {
 }
 
 // Extract the common authentication logic to a shared function
-async function processAuthentication(code: string) {
+async function processAuthentication(code: string, req: NextRequest) {
+  const origin = req.headers.get("origin") || `https://${req.headers.get("host")}` || "https://mcsr.vercel.app";
   try {
     // Exchange code for token
     const tokenResponse = await fetch("https://login.live.com/oauth20_token.srf", {
@@ -78,7 +79,7 @@ async function processAuthentication(code: string) {
         client_secret: process.env.MICROSOFT_CLIENT_SECRET || "",
         code,
         grant_type: "authorization_code",
-        redirect_uri: `${window.location.origin}/api/auth/callback`,
+        redirect_uri: `${origin}/api/auth/callback`,
       }),
     });
 
