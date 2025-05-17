@@ -21,9 +21,9 @@ interface PlayerDialogProps {
 }
 
 function validDate(date: any): React.ReactNode {
-  if (!date) return "Unknown";
+  if (!date) return "Desconhecido";
   const d = typeof date === "number" ? new Date(date * 1000) : new Date(date);
-  if (isNaN(d.getTime())) return "Unknown";
+  if (isNaN(d.getTime())) return "Desconhecido";
   return d.toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
@@ -49,22 +49,22 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg w-full dark:bg-gray-900 bg-white text-black dark:text-white font-minecraft border border-gray-300 dark:border-gray-700 shadow-lg bg-[url('/textures/stone.png')] bg-repeat">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl mb-1 font-minecraft uppercase">
+          <DialogTitle className="text-center text-2xl mb-1 font-chat uppercase">
             {player?.nickname}
           </DialogTitle>
-          <p className="text-sm text-center text-gray-400 font-minecraft">
-            UUID: {player?.uuid}
+          <p className="text-sm text-center text-gray-400 font-chat">
+            ID: {player?.uuid}
           </p>
         </DialogHeader>
 
-        {loading && <p className="text-center mt-4 font-minecraft">Loading...</p>}
+        {loading && <p className="text-center mt-4 font-minecraft">Carregando...</p>}
 
         {data && (
           <Tabs defaultValue="overview" className="w-full mt-4 font-minecraft">
-            <TabsList className="flex justify-center gap-2 mb-4 font-minecraft text-lg">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
-              <TabsTrigger value="achievements">Achievements</TabsTrigger>
+            <TabsList className="flex justify-center gap-2 font-minecraft text-lg w-full">
+              <TabsTrigger value="overview">Geral</TabsTrigger>
+              <TabsTrigger value="history">Historico</TabsTrigger>
+              <TabsTrigger value="achievements">Conquistas</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -82,19 +82,19 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
 
                 <div className="space-y-2">
                   {[
-                    { icon: "📅", label: "Joined", value: validDate(data?.data?.timestamp?.firstOnline) },
-                    { icon: "⏰", label: "Last Online", value: validDate(data?.data?.timestamp?.lastOnline) },
-                    { icon: "🎯", label: "Elo", value: data?.data?.eloRate ?? "N/A" },
-                    { icon: "🏅", label: "Rank", value: data?.data?.eloRank ?? "N/A" },
-                    { icon: "📈", label: "Highest Elo", value: data?.data?.seasonResult?.highest ?? "N/A" },
-                    { icon: "📉", label: "Lowest Elo", value: data?.data?.seasonResult?.lowest ?? "N/A" },
+                    { icon: "📅", label: "Entrou", value: validDate(data?.data?.timestamp?.firstOnline) },
+                    { icon: "🗓️", label: "Ultimo Login", value: validDate(data?.data?.timestamp?.lastLogin) },
+                    { icon: "🎯", label: "Pontos", value: data?.data?.eloRate ?? "N/A" },
+                    { icon: "🏅", label: "Posicao", value: data?.data?.eloRank ?? "N/A" },
+                    { icon: "📈", label: "Maior Elo", value: data?.data?.seasonResult?.highest ?? "N/A" },
+                    { icon: "📉", label: "Menor Elo", value: data?.data?.seasonResult?.lowest ?? "N/A" },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         <span className="text-lg">{item.icon}</span>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{item.label}</span>
+                        <span className="text-md text-gray-600 dark:text-gray-400">{item.label}</span>
                       </div>
-                      <span className="text-sm font-chat font-semibold mt-2">{item.value}</span>
+                      <span className="text-sm font-chat mt-2">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -129,15 +129,18 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
                   <>
                     <div className="space-y-1 px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-sm">
                       <div className="flex items-center justify-between">
-                        <span>🧮 Last Elo</span>
+                        {/* <span>🧮 Last Elo</span> */}
+                        <span>🧮 Ultimo Elo</span>
                         <span>{data.data.seasonResult.last?.eloRate ?? "N/A"}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>🏅 Last Rank</span>
+                        {/* <span>🏅 Last Rank</span> */}
+                        <span>🏅 Ultimo Rank</span>
                         <span>{data.data.seasonResult.last?.eloRank ?? "N/A"}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>💠 Phase Points</span>
+                        {/* <span>💠 Phase Points</span> */}
+                        <span>💠 Pontos da Fase</span>
                         <span>{data.data.seasonResult.last?.phasePoint ?? 0}</span>
                       </div>
                     </div>
@@ -146,7 +149,8 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
 
                     {data.data.seasonResult.phases?.length ? (
                       <div className="space-y-2">
-                        <p className="text-sm opacity-80">📜 Phase History:</p>
+                        {/* <p className="text-sm opacity-80">📜 Phase History:</p> */}
+                        <p className="text-sm opacity-80">📜 Historico de Fases:</p>
                         <ul className="list-disc list-inside pl-2 space-y-1">
                           {data.data.seasonResult.phases.map((phase: any, index: number) => (
                             <li
@@ -154,17 +158,20 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
                               className="pl-1 animate-fade-in-up opacity-0 animate-delay-[150ms] animate-fill-forwards"
                               style={{ animationDelay: `${index * 100}ms` }}
                             >
-                              Phase {phase.phase}: Elo {phase.eloRate}, Rank {phase.eloRank}, Points {phase.point}
+                              {/* Phase {phase.phase}: Elo {phase.eloRate}, Rank {phase.eloRank}, Points {phase.point} */}
+                              Fase {phase.phase}: Elo {phase.eloRate}, Rank {phase.eloRank}, Pontos {phase.point}
                             </li>
                           ))}
                         </ul>
                       </div>
                     ) : (
-                      <p className="text-sm italic text-gray-500">No detailed history phases available.</p>
+                      // <p className="text-sm italic text-gray-500">No detailed history phases available.</p>
+                      <p className="text-sm italic text-gray-500">Nenhum historico detalhado de fases disponivel.</p>
                     )}
                   </>
                 ) : (
-                  <p className="text-sm italic text-gray-500">No history found.</p>
+                  // <p className="text-sm italic text-gray-500">No history found.</p>
+                  <p className="text-sm italic text-gray-500">Nenhum historico encontrado.</p>
                 )}
               </div>
             </TabsContent>
@@ -178,7 +185,8 @@ export default function PlayerDialog({ open, onOpenChange, player }: PlayerDialo
                     ))}
                   </ul>
                 ) : (
-                  <p>No achievements found.</p>
+                  // <p>No achievements found.</p>
+                  <p>Nenhuma conquista encontrada.</p>
                 )}
               </div>
             </TabsContent>

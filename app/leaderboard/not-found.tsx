@@ -15,10 +15,11 @@ export default function NotFound() {
         unoptimized/>
       <h1 className="text-2xl sm:text-3xl  mb-2">404 - BLOCK NOT FOUND</h1>
       <p className="text-sm sm:text-base text-gray-300 max-w-xs mb-4">
-        Oops! You seem to have dug too deep and ended up in the void. 🕳️
+        {/* Oops! You seem to have dug too deep and ended up in the void. 🕳️ */}
+        Ops! Você parece ter cavado muito fundo e acabou no void. 🕳️
       </p>
       <Link href="/" className="px-4 py-1.5 bg-white text-black border border-gray-700 rounded shadow hover:scale-105 transition-transform">
-        Return to the Overworld
+        Voltar para o início
       </Link>
     </div>
   );

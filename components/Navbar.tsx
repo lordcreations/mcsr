@@ -29,9 +29,9 @@ export function Navbar() {
   
   // Navigation items
   const navItems = [
-    { name: "Home", href: "/" },
-    { name: "Leaderboard", href: "/leaderboard" },
-    { name: "Tournaments", href: "/tournaments" },
+    { name: "Inicio", href: "/" },
+    { name: "Ranking", href: "/leaderboard" },
+    { name: "Torneios", href: "/tournaments" },
   ]
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export function Navbar() {
                 className="rounded-sm"
               />
               <span className="text-white text-xl tracking-wide drop-shadow-[1px_1px_0px_#000]">
-                MCSR Brazil
+                MCSR Brasil
               </span>
             </Link>
 

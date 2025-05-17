@@ -156,7 +156,7 @@ const fetchProfileData = async () => {
             <div className="w-full max-w-4xl mx-auto mt-8 p-4">
                 <div className="flex flex-col items-center justify-center py-16">
                     <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                    <p className="mt-4 text-lg font-minecraft text-gray-600 dark:text-gray-400">Loading your profile...</p>
+                    <p className="mt-4 text-lg font-minecraft text-gray-600 dark:text-gray-400">Carregando perfil...</p>
                 </div>
             </div>
         );
@@ -167,8 +167,10 @@ const fetchProfileData = async () => {
             <div className="w-full max-w-4xl mx-auto mt-8 p-4">
                 <div className="flex flex-col items-center justify-center py-16 bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <AlertCircle className="h-12 w-12 text-amber-500" />
-                    <h2 className="mt-4 text-xl font-minecraft">You need to login</h2>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">Please login with your Minecraft account to view and edit your profile.</p>
+                    <h2 className="mt-4 text-xl font-minecraft">Você precisa fazer login</h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">
+                        Voce precisa fazer login com sua conta da Microsoft para visualizar e editar seu perfil.
+                    </p>
                 </div>
             </div>
         );
@@ -221,9 +223,9 @@ const fetchProfileData = async () => {
                     <div className="max-w-md mx-auto bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-sm">
                         <div className="space-y-4">
                             <div className="text-center mb-4">
-                                <h3 className="font-minecraft text-xl mb-2">Choose Your City</h3>
+                                <h3 className="font-minecraft text-xl mb-2">Escolha sua cidade</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Select the flag that will be displayed on your profile
+                                    Selecione a bandeira que será exibida em seu perfil
                                 </p>
                             </div>
 
@@ -243,13 +245,13 @@ const fetchProfileData = async () => {
                             )}
 
                             <div className="space-y-2">
-                                <Label htmlFor="country" className="font-minecraft">Country Selection</Label>
+                                <Label htmlFor="country" className="font-minecraft">Seleção de cidade</Label>
                                 <Select
                                     value={selectedCountry}
                                     onValueChange={setSelectedCountry}
                                 >
                                     <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select your city" />
+                                        <SelectValue placeholder="Selecione sua cidade" />
                                     </SelectTrigger>
                                     <SelectContent className="max-h-[300px]">
                                         {brazilStates.map((country) => (
@@ -282,17 +284,17 @@ const fetchProfileData = async () => {
                         {isSaving ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Saving...
+                                Salvando...
                             </>
                         ) : savedSuccess ? (
                             <>
                                 <CheckCircle className="mr-2 h-4 w-4" />
-                                Saved!
+                                Salvo!
                             </>
                         ) : (
                             <>
                                 <Save className="mr-2 h-4 w-4" />
-                                Save City
+                                Salvar
                             </>
                         )}
                     </Button>

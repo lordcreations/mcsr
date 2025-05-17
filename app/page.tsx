@@ -39,14 +39,14 @@ export default function Home() {
               href="/leaderboard"
               className="font-minecraft px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition-all hover:scale-105"
             >
-              View Leaderboard
+              VER RANKING
             </Link>
             
             <Link 
               href="/tournaments"
               className="font-minecraft px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg shadow transition-all hover:scale-105"
             >
-              Tournaments
+              Torneios
             </Link>
           </div>
         </div>

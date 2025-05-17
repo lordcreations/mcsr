@@ -52,66 +52,64 @@ export default function Home() {
 
   const { theme, setTheme } = useTheme();
 
-useEffect(() => {
-  // First fetch the players from MCSR API
-  fetch("https://mcsrranked.com/api/leaderboard?country=br")
-    .then((res) => res.json())
-    .then(async (data) => {
-      const initialPlayers = (data.data?.users || [])
-        .filter((u: Player) => u.seasonResult)
-        .sort(
-          (a: Player, b: Player) =>
-            a.seasonResult.eloRank - b.seasonResult.eloRank
-        )
-        .map((player: any) => ({
-          ...player,
-          animationPhase: Math.random() * -3,
-        }));
+  useEffect(() => {
+    // First fetch the players from MCSR API
+    fetch("https://mcsrranked.com/api/leaderboard?country=br")
+      .then((res) => res.json())
+      .then(async (data) => {
+        const initialPlayers = (data.data?.users || [])
+          .filter((u: Player) => u.seasonResult)
+          .sort(
+            (a: Player, b: Player) =>
+              a.seasonResult.eloRank - b.seasonResult.eloRank
+          )
+          .map((player: any) => ({
+            ...player,
+            animationPhase: Math.random() * -3,
+          }));
 
-      // Get all player UUIDs
-      const playerUuids = initialPlayers.map((p: Player) => p.uuid);
+        // Get all player UUIDs
+        const playerUuids = initialPlayers.map((p: Player) => p.uuid);
 
-      try {
-        const chunks = [];
-        const chunkSize = 30;
+        try {
+          const chunks = [];
+          const chunkSize = 30;
 
-        for (let i = 0; i < playerUuids.length; i += chunkSize) {
-          chunks.push(playerUuids.slice(i, i + chunkSize));
-        }
-
-        for (const chunk of chunks) {
-          const queryParams = new URLSearchParams();
-          chunk.forEach((uuid: string) => queryParams.append("uuids", uuid));
-
-          const localPlayersResponse = await fetch(
-            `/api/users/check-profiles?${queryParams}`
-          );
-
-          if (localPlayersResponse.ok) {
-            const localPlayersData = await localPlayersResponse.json();
-
-            initialPlayers.forEach((player: Player) => {
-const match = localPlayersData.profiles.find(
-  (p: any) => p.uuid === player.uuid
-);
-
-if (match) {
-  player.hasLocalProfile = true;
-  player.country = match.country ?? player.country;
-}
-
-            });
+          for (let i = 0; i < playerUuids.length; i += chunkSize) {
+            chunks.push(playerUuids.slice(i, i + chunkSize));
           }
+
+          for (const chunk of chunks) {
+            const queryParams = new URLSearchParams();
+            chunk.forEach((uuid: string) => queryParams.append("uuids", uuid));
+
+            const localPlayersResponse = await fetch(
+              `/api/users/check-profiles?${queryParams}`
+            );
+
+            if (localPlayersResponse.ok) {
+              const localPlayersData = await localPlayersResponse.json();
+
+              initialPlayers.forEach((player: Player) => {
+                const match = localPlayersData.profiles.find(
+                  (p: any) => p.uuid === player.uuid
+                );
+
+                if (match) {
+                  player.hasLocalProfile = true;
+                  player.country = match.country ?? player.country;
+                }
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Error checking local profiles:", error);
         }
-      } catch (error) {
-        console.error("Error checking local profiles:", error);
-      }
 
-      setPlayers(initialPlayers);
-      setLoading(false);
-    });
-}, []);
-
+        setPlayers(initialPlayers);
+        setLoading(false);
+      });
+  }, []);
 
   const toggleDarkMode = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -143,32 +141,22 @@ if (match) {
           <div className="px-3 sm:px-6 flex flex-col items-center justify-between w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
             <div className="mb-25 flex flex-col sm:flex-row justify-center items-start sm:items-center w-full gap-4">
               {/* Center Column - Brazil + Leaderboard */}
-              <div className="order-2 mb-6 sm:mb-0 flex flex-col items-center justify-center -ml-4 sm:-mr-0">
-                <div className="flex items-center justify-center mb-2">
-                  <Image
-                    src="/flags/br.svg"
-                    alt="BR Flag"
-                    width={40}
-                    height={40}
-                    className="h-[2.5rem] w-auto object-contain align-middle shadow"
-                    loading="lazy"
-                  />
-                  <span
-                    className="text-2xl font-minecraft text-gray-900 dark:text-white ml-2"
-                    style={{
-                      textShadow:
-                        theme === "dark"
-                          ? "2px 2px 0 rgba(255, 255, 255, 0.3)"
-                          : "2px 2px 0 rgba(0, 0, 0, 0.3)",
-                    }}
-                  >
-                    BRAZIL
-                  </span>
-                </div>
-                <h1 className="pb-2 font-minecraft sm:text-4xl text-white dark:text-black text-4xl bg-gray-900 dark:bg-white rounded shadow w-fit h-[60px] flex items-center justify-center px-6 leading-none">
-                  LEADERBOARD
-                </h1>
-              </div>
+<div className="order-2 mb-6 sm:mb-0 flex flex-col items-center justify-center w-full px-4">
+  <div className="flex items-center justify-center gap-2 bg-gray-900 dark:bg-white rounded shadow px-6 py-2">
+    <h1 className="font-minecraft text-3xl sm:text-4xl text-white dark:text-black leading-none mb-2">
+      RANKING
+    </h1>
+    <Image
+      src="/flags/br.svg"
+      alt="BR Flag"
+      width={32}
+      height={32}
+      className="h-8 w-auto object-contain align-middle mt-2 mb-1"
+      loading="lazy"
+    />
+  </div>
+</div>
+
 
               {/* Right Column - Back Button */}
             </div>
@@ -279,7 +267,7 @@ if (match) {
             <div className="w-full max-h-[500px] overflow-hidden">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 px-1 gap-2">
                 <h2 className="text-2xl font-minecraft px-4 py-1 bg-gray-900 dark:bg-white text-white dark:text-black rounded shadow whitespace-nowrap pb-2">
-                  OTHER PLAYERS
+                  MAIS JOGADORES
                 </h2>
                 <div className="relative w-[220px]">
                   <Image
@@ -292,7 +280,7 @@ if (match) {
                   />
                   <input
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Procurar..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full pl-8 pr-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded text-sm font-sans outline-none focus:ring-2 focus:ring-gray-500 relative sm:w-[220px]"
@@ -367,7 +355,7 @@ if (match) {
 
                         {/* Hover text centered in the row */}
                         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-xs px-3 py-1 rounded shadow border border-gray-300 dark:border-gray-600 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-30 tracking-wide">
-                          CLICK TO SEE DETAILS
+                          Detalhes do jogador
                         </span>
                       </li>
                     ))}
