@@ -32,32 +32,26 @@ export function MicrosoftAuthProvider({
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // Check for login success or error from redirect
   useEffect(() => {
     const loginSuccess = searchParams.get("login");
     const error = searchParams.get("error");
     
     if (loginSuccess === "success") {
-      // Remove the query parameter
       const url = new URL(window.location.href);
       url.searchParams.delete("login");
       window.history.replaceState({}, document.title, url.toString());
       
-      // Reload user data
       checkAuth();
     } else if (error) {
       console.error("Login error:", error);
-      // Remove the query parameter
       const url = new URL(window.location.href);
       url.searchParams.delete("error");
       window.history.replaceState({}, document.title, url.toString());
     } else {
-      // Normal auth check on load
       checkAuth();
     }
   }, [searchParams]);
 
-  // First check localStorage for a cached user to show immediately
   useEffect(() => {
     try {
       const cachedUser = localStorage.getItem('mcsr_user');
@@ -70,30 +64,30 @@ export function MicrosoftAuthProvider({
       console.error("Failed to read cached user:", e);
     }
     
-    // Then perform the actual validation
+    
     checkAuth();
   }, []);
 
   useEffect(() => {
-    // Check for authenticated header first (instant)
+    
     const isAuthHeader = document.head.querySelector('meta[name="x-is-authenticated"]');
     if (isAuthHeader && isAuthHeader.getAttribute('content') === 'true') {
       setIsAuthenticated(true);
     }
     
-    // Then validate properly
+    
     checkAuth();
   }, []);
 
-  // Check for authentication
+  
   const checkAuth = async () => {
     try {
       setLoading(true);
       
-      // Make a request to the server to check authentication status
+      
       const response = await fetch("/api/auth/validate", {
         method: "GET",
-        credentials: "include", // Important! This ensures cookies are sent
+        credentials: "include", 
       });
       
       if (response.ok) {
@@ -101,7 +95,7 @@ export function MicrosoftAuthProvider({
         setUser(userData);
         setIsAuthenticated(true);
         
-        // Cache the user data
+        
         localStorage.setItem('mcsr_user', JSON.stringify(userData));
       } else {
         setIsAuthenticated(false);
@@ -133,7 +127,7 @@ export function MicrosoftAuthProvider({
     try {
       await fetch('/api/auth/logout', { 
         method: 'POST',
-        credentials: 'include' // Important for cookies
+        credentials: 'include' 
       });
       setUser(null);
       setIsAuthenticated(false);

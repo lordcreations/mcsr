@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoonIcon, SunIcon, MenuIcon, LogOutIcon, UserIcon, ChevronDownIcon, UserCogIcon } from "lucide-react"
+import { MoonIcon, SunIcon, MenuIcon, LogOutIcon, ChevronDownIcon, UserCogIcon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { useTheme } from "next-themes"
@@ -27,7 +27,6 @@ export function Navbar() {
   const { user, loading, login, logout, isAuthenticated } = useAuth()
   const [profileOpen, setProfileOpen] = useState(false)
   
-  // Navigation items
   const navItems = [
     { name: "Inicio", href: "/" },
     { name: "Ranking", href: "/leaderboard" },
@@ -81,10 +80,8 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Authentication Button/Profile */}
             {mounted && (
               loading ? (
-                // Show a loading skeleton during authentication check
                 <div className="flex items-center gap-2 animate-pulse">
                   <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-700"></div>
                   <div className="h-5 w-24 bg-gray-300 dark:bg-gray-700 rounded hidden sm:block"></div>
@@ -112,12 +109,10 @@ export function Navbar() {
                       
                       <ChevronDownIcon className="h-4 w-4 text-gray-500 dark:text-gray-400 animate-bounce group-hover:text-blue-500 transition-colors" />
                       
-                      {/* Visual indicator that this is a dropdown */}
                       <div className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-transparent group-hover:bg-blue-500 transition-colors"></div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
-                    {/* Profile dropdown content */}
                     <div className="flex items-center gap-3 p-2 border-b border-gray-200 dark:border-gray-700 mb-2">
                       <Avatar className="h-14 w-14">
                         <AvatarImage 
@@ -139,7 +134,6 @@ export function Navbar() {
                       </div>
                     </div>
                     
-                    {/* Changed from Link to button that opens profile dialog */}
                     <DropdownMenuItem 
                       className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
                       onClick={() => {
@@ -177,7 +171,7 @@ export function Navbar() {
                   }} 
                   variant="default" 
                   className="flex items-center gap-2 font-minecraft text-sm bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg transition-all"
-                  disabled={loading} // Disable during loading
+                  disabled={loading}
                 >
                   {loading ? (
                     <>
@@ -209,7 +203,6 @@ export function Navbar() {
               )}
             </Button>
             
-            {/* Mobile Navigation */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -240,7 +233,6 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Profile Dialog */}
       <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
         <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none">
           <DialogHeader className="sr-only">

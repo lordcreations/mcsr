@@ -8,7 +8,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Refresh token required" }, { status: 400 });
     }
     
-    // Microsoft OAuth refresh token flow
     const clientId = process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
     const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
     
@@ -34,9 +33,6 @@ export async function POST(request: NextRequest) {
     }
     
     const tokenData = await tokenResponse.json();
-    
-    // Continue with Xbox authentication flow if needed
-    // ...
     
     return NextResponse.json({
       accessToken: tokenData.access_token,

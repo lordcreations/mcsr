@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        profiles: existingProfiles, // return full objects
+        profiles: existingProfiles, 
       });
     });
   } catch (error) {

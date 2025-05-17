@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 Minecraft Ranked Leaderboard
 
-## Getting Started
+A modern, responsive web leaderboard for Minecraft players featuring:
 
-First, run the development server:
+* 🏆 Player Elo Rankings
+* 🗺️ Country Flags
+* 🔒 Microsoft OAuth Authentication
+* 🌓 Light/Dark Theme Support
+* 📱 Fully Responsive for Mobile and Desktop
+
+---
+
+## ✨ Features
+
+* Fetches real-time player data from the [MCSR Ranked API](https://mcsrranked.com/)
+* Players sorted by Elo ranking
+* Player dialog modal with additional info and tabs
+* Country flag display next to usernames
+* Microsoft OAuth login with secure token handling
+* Customizable UI with Tailwind CSS
+* Dark/light theme toggle
+* Client-side only Minecraft profile requests
+
+---
+
+## 🧱 Tech Stack
+
+| Layer      | Technology                |
+| ---------- | ------------------------- |
+| Framework  | Next.js (App Router)      |
+| Styling    | Tailwind CSS              |
+| Auth       | Microsoft Azure OAuth 2.0 |
+| API Data   | MCSR Ranked API           |
+| Hosting    | Vercel                    |
+| State Mgmt | React Hooks               |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/lordcreations/mcsr.git
+cd mcsr
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Environment Setup
+
+Create a `.env.local` file:
+
+```env
+MICROSOFT_CLIENT_SECRET=
+NEXT_PUBLIC_MICROSOFT_CLIENT_ID=
+NEXT_PUBLIC_APP_URL=
+DATABASE_URL=
+```
+
+### 4. Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔐 Authentication Flow
 
-## Learn More
+```text
+Browser ----> [Your App] ----> Microsoft OAuth
+                        <-- Access & Refresh Tokens
+```
 
-To learn more about Next.js, take a look at the following resources:
+* Tokens are stored securely in HTTP-only cookies.
+* Redirect URI must match Azure configuration.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🗂 Project Structure
 
-## Deploy on Vercel
+```
+root/
+├── app/
+│   ├── page.tsx              # Main leaderboard
+│   └── api/auth/             # Auth callback + logout
+├── components/
+│   ├── Navbar.tsx            # Top nav bar
+│   ├── PlayerDialog.tsx      # Player modal
+├── lib/
+│   └── countries.ts          # Country data
+├── public/
+│   └── flags/                # Country flag SVGs
+├── styles/
+│   └── globals.css           # Tailwind base styles
+└── .env.local                # Local environment variables
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ☁️ Deployment
+
+1. Push to GitHub
+2. Connect repo to [Vercel](https://vercel.com/)
+3. Add environment variables in the Vercel dashboard
+
+No additional setup is needed for deployment.
+
+---
+
+## ❓ FAQ
+
+**Q: Why does authentication fail only on Vercel?**
+Make sure the callback URL is correctly set in Azure and `NEXT_PUBLIC_APP_URL`.
+
+**Q: Can I use a different API instead of MCSR?**
+Yes, replace the API fetch logic in the `page.tsx` file.
+
+---
+
+## 📄 License
+
+MIT License. Use, modify, and distribute freely.

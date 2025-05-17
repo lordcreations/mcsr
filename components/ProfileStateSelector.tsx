@@ -29,7 +29,7 @@ export function ProfileStateSelector({ selectedState, onStateChange, disabled = 
                 height={12}
                 className="rounded"
                 onError={(e) => {
-                  // Fallback to Brazilian flag or question mark if state flag not found
+                  
                   if (state.code !== "unknown") {
                     (e.target as HTMLImageElement).src = "/flags/br.svg";
                   } else {

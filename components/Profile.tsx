@@ -49,7 +49,6 @@ export default function Profile() {
     const [selectedCountry, setSelectedCountry] = useState<string>("unknown");
     const [savedSuccess, setSavedSuccess] = useState(false);
 
-    // Fetch user profile data
     useEffect(() => {
         if (!user?.uuid) return;
 
@@ -57,16 +56,13 @@ const fetchProfileData = async () => {
   try {
     setIsLoading(true);
     
-    // First try to get from our DB
     let response = await fetch(`/api/users/profile?uuid=${user.uuid}`);
     
     if (response.ok) {
-      // Successfully retrieved profile from our database
       const userData = await response.json();
       setProfileData(userData);
       setSelectedCountry(userData.country || "unknown");
     } else {
-      // If not found in our DB, fetch from MCSR API
       response = await fetch(`https://mcsrranked.com/api/users/${user.uuid}`);
       const mcsrData = await response.json();
       
@@ -82,7 +78,6 @@ const fetchProfileData = async () => {
         setProfileData(profile);
         setSelectedCountry(profile.country);
         
-        // Save this profile to our database for future use
         await fetch('/api/users/profile', {
           method: 'POST',
           headers: {
@@ -98,7 +93,6 @@ const fetchProfileData = async () => {
     }
   } catch (error) {
     console.error("Failed to fetch profile data:", error);
-    // Create a default profile if we can't fetch data
     const defaultProfile: UserProfile = {
       uuid: user.uuid ?? "",
       nickname: user.displayName,

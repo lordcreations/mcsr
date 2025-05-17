@@ -1,10 +1,6 @@
-// app/api/auth/callback/route.ts
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import { HttpsProxyAgent } from "https-proxy-agent";
 
-// Handle GET requests (Microsoft redirects here with code as query param)
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
@@ -24,21 +20,22 @@ export async function GET(req: NextRequest) {
 
     const authResult = await processAuthentication(code, redirectUri);
     if (!authResult.success) {
-      return NextResponse.redirect(new URL(`/login?error=${authResult.error}`, req.url));
+      return NextResponse.redirect(
+        new URL(`/login?error=${authResult.error}`, req.url)
+      );
     }
 
     const { user, mcAccessToken, refreshToken } = authResult;
 
     const response = NextResponse.redirect(referer || new URL("/", req.url));
     const isProduction = process.env.NODE_ENV === "production";
-const cookieOptions = {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? 'none' : 'lax', // no cast here
-  maxAge: 60 * 60 * 24 * 7,
-  path: '/',
-} as const; // ✅ ensures valid literal values for `sameSite`
-
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    } as const;
 
     response.cookies.set("auth_token", mcAccessToken, cookieOptions);
     response.cookies.set("refresh_token", refreshToken, cookieOptions);
@@ -50,12 +47,14 @@ const cookieOptions = {
   }
 }
 
-// Handle POST (used client-side, if needed)
 export async function POST(req: NextRequest) {
   try {
     const { code } = await req.json();
     if (!code) {
-      return NextResponse.json({ error: "Authorization code is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Authorization code is required" },
+        { status: 400 }
+      );
     }
 
     const host = req.headers.get("host") || "localhost:3000";
@@ -76,24 +75,19 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error("Authentication error:", error);
-    return NextResponse.json({ error: "Authentication failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Authentication failed" },
+      { status: 500 }
+    );
   }
 }
 
-// Reusable authentication logic
 async function processAuthentication(code: string, redirectUri: string) {
   try {
-    // const proxy = `${process.env.PROXY_URL}`;
-    // const agent = new HttpsProxyAgent(proxy);
-
     const minecraftApi = axios.create({
-    baseURL: "https://vex.minecraftservices.com",
-    // httpsAgent: agent,
+      baseURL: "https://vex.minecraftservices.com",
     });
-    // request to Ipfy to test the proxy
-    // const ipfyResponse = await minecraftApi.get("https://api.ipify.org?format=json");
-    // console.log("IP Address:", ipfyResponse.data.ip);
-    const clientId = process.env.MICROSOFT_CLIENT_ID || process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
+    const clientId = process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
     const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
 
     if (!clientId || !clientSecret || !redirectUri) {
@@ -118,7 +112,6 @@ async function processAuthentication(code: string, redirectUri: string) {
     const { access_token, refresh_token } = tokenResponse.data;
     console.log("OAuth Access Token obtained");
 
-    // Xbox Live authentication
     const xblResponse = await axios.post(
       "https://user.auth.xboxlive.com/user/authenticate",
       {
@@ -130,14 +123,18 @@ async function processAuthentication(code: string, redirectUri: string) {
         RelyingParty: "http://auth.xboxlive.com",
         TokenType: "JWT",
       },
-      { headers: { "Content-Type": "application/json", Accept: "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
     );
 
     const xblData = xblResponse.data;
     const xblToken = xblData.Token;
     const userHash = xblData.DisplayClaims.xui[0].uhs;
 
-    // XSTS authentication
     const xstsResponse = await axios.post(
       "https://xsts.auth.xboxlive.com/xsts/authorize",
       {
@@ -148,12 +145,16 @@ async function processAuthentication(code: string, redirectUri: string) {
         RelyingParty: "rp://api.minecraftservices.com/",
         TokenType: "JWT",
       },
-      { headers: { "Content-Type": "application/json", Accept: "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
     );
 
     const xstsToken = xstsResponse.data.Token;
 
-    // Minecraft login
     const mcResponse = await minecraftApi.post(
       "/authentication/login_with_xbox",
       {
@@ -166,15 +167,13 @@ async function processAuthentication(code: string, redirectUri: string) {
       }
     );
 
-
     const mcAccessToken = mcResponse.data.access_token;
 
-    // Get Minecraft profile
-const profileResponse = await minecraftApi.get("/minecraft/profile", {
-  headers: {
-    Authorization: `Bearer ${mcAccessToken}`,
-  },
-});
+    const profileResponse = await minecraftApi.get("/minecraft/profile", {
+      headers: {
+        Authorization: `Bearer ${mcAccessToken}`,
+      },
+    });
 
     const profileData = profileResponse.data;
 
@@ -192,7 +191,10 @@ const profileResponse = await minecraftApi.get("/minecraft/profile", {
       refreshToken: refresh_token,
     };
   } catch (error: any) {
-    console.error("Authentication error in processAuthentication:", error?.response?.data || error);
+    console.error(
+      "Authentication error in processAuthentication:",
+      error?.response?.data || error
+    );
     return {
       success: false,
       error: "auth_processing_failed",

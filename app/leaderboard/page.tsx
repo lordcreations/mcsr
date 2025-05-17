@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import PlayerDialog from "@/components/PlayerDialog";
@@ -13,7 +13,7 @@ type Player = {
     eloRate: number;
   };
   animationPhase?: number;
-  hasLocalProfile?: boolean; // New property to track if in our DB
+  hasLocalProfile?: boolean;
 };
 
 export default function Home() {
@@ -33,19 +33,6 @@ export default function Home() {
       player.nickname.toLowerCase().includes(search.toLowerCase())
     );
 
-  const loginWithMicrosoft = () => {
-    const clientId = process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID;
-
-    const redirectUri = "http://localhost:3000/api/auth/callback";
-    const scope = "XboxLive.signin offline_access";
-    const responseType = "code";
-
-    const authUrl = `https://login.live.com/oauth20_authorize.srf?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(
-      scope
-    )}`;
-    window.location.href = authUrl;
-  };
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -53,7 +40,6 @@ export default function Home() {
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    // First fetch the players from MCSR API
     fetch("https://mcsrranked.com/api/leaderboard?country=br")
       .then((res) => res.json())
       .then(async (data) => {
@@ -68,7 +54,6 @@ export default function Home() {
             animationPhase: Math.random() * -3,
           }));
 
-        // Get all player UUIDs
         const playerUuids = initialPlayers.map((p: Player) => p.uuid);
 
         try {
@@ -119,7 +104,7 @@ export default function Home() {
 
   return (
     <div className="w-full transition-all duration-500">
-      {/* Loading state - no changes needed */}
+      {}
       {(loading || !fullyLoaded) && (
         <div className="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center transition-opacity duration-500 space-y-42">
           <Image
@@ -137,28 +122,27 @@ export default function Home() {
 
       {fullyLoaded && (
         <main className="w-full px-2 sm:px-4 transition-all duration-500 flex items-center justify-center h-[calc(100vh-4rem)] overflow-y-hidden box-border bg-gradient-to-b from-[#f7f7f8] to-[#e3e4e6] dark:from-[#0f172a] dark:to-[#1e293b] text-black dark:text-white animate-fade-in">
-          {/* Main content - update flag display logic */}
+          {}
           <div className="px-3 sm:px-6 flex flex-col items-center justify-between w-full max-w-4xl p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
             <div className="mb-25 flex flex-col sm:flex-row justify-center items-start sm:items-center w-full gap-4">
-              {/* Center Column - Brazil + Leaderboard */}
-<div className="order-2 mb-6 sm:mb-0 flex flex-col items-center justify-center w-full px-4">
-  <div className="flex items-center justify-center gap-2 bg-gray-900 dark:bg-white rounded shadow px-6 py-2">
-    <h1 className="font-minecraft text-3xl sm:text-4xl text-white dark:text-black leading-none mb-2">
-      RANKING
-    </h1>
-    <Image
-      src="/flags/br.svg"
-      alt="BR Flag"
-      width={32}
-      height={32}
-      className="h-8 w-auto object-contain align-middle mt-2 mb-1"
-      loading="lazy"
-    />
-  </div>
-</div>
+              {}
+              <div className="order-2 mb-6 sm:mb-0 flex flex-col items-center justify-center w-full px-4">
+                <div className="flex items-center justify-center gap-2 bg-gray-900 dark:bg-white rounded shadow px-6 py-2">
+                  <h1 className="font-minecraft text-3xl sm:text-4xl text-white dark:text-black leading-none mb-2">
+                    RANKING
+                  </h1>
+                  <Image
+                    src="/flags/br.svg"
+                    alt="BR Flag"
+                    width={32}
+                    height={32}
+                    className="h-8 w-auto object-contain align-middle mt-2 mb-1"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
 
-
-              {/* Right Column - Back Button */}
+              {}
             </div>
 
             <div className="grid grid-cols-3 gap-2 sm:flex flex-wrap items-end justify-center w-full sm:gap-6 mb-12">
@@ -245,7 +229,7 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    {/* Only show flag if player has a local profile */}
+                    {}
                     {player.hasLocalProfile && (
                       <Image
                         src={`/flags/${player.country.toUpperCase()}.svg`}
@@ -302,14 +286,14 @@ export default function Home() {
                         style={{ position: "relative" }}
                       >
                         <div className="flex items-center gap-3">
-                          {/* Rank */}
+                          {}
                           <span className="font-chat mt-4 text-sm w-8 text-center font-bold text-gray-500 dark:text-gray-400">
                             {player.seasonResult.eloRank}
                           </span>
 
-                          {/* Head + Nickname wrapper */}
+                          {}
                           <div className="flex items-center gap-2">
-                            {/* Avatar */}
+                            {}
                             <Image
                               src={`/api/player-head?uuid=${player.uuid}`}
                               alt={player.nickname}
@@ -328,12 +312,12 @@ export default function Home() {
                               }
                             />
 
-                            {/* Nickname */}
+                            {}
                             <div className="flex items-center gap-2">
                               <span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem]">
                                 {player.nickname}
                               </span>
-                              {/* Only show flag if player has a local profile */}
+                              {}
                               {player.hasLocalProfile && (
                                 <Image
                                   src={`/flags/${player.country.toLowerCase()}.svg`}
@@ -348,12 +332,12 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* Elo */}
+                        {}
                         <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow pt-3">
                           {player.seasonResult.eloRate}
                         </span>
 
-                        {/* Hover text centered in the row */}
+                        {}
                         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-minecraft text-xs px-3 py-1 rounded shadow border border-gray-300 dark:border-gray-600 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-30 tracking-wide">
                           Detalhes do jogador
                         </span>

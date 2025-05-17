@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  // Only apply middleware to API routes that need authentication
   if (!request.nextUrl.pathname.startsWith('/api/users') && 
       !request.nextUrl.pathname.startsWith('/api/protected')) {
     return NextResponse.next();
@@ -11,11 +10,9 @@ export async function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get('refresh_token')?.value;
   
   if (!authToken && !refreshToken) {
-    // No tokens, let the API handle this
     return NextResponse.next();
   }
   
-  // Check if auth token is valid
   try {
     const response = await fetch(`${request.nextUrl.origin}/api/auth/validate`, {
       headers: {
@@ -24,11 +21,9 @@ export async function middleware(request: NextRequest) {
     });
     
     if (response.ok) {
-      // Token is valid, proceed
       return NextResponse.next();
     }
     
-    // Token is invalid, try refreshing if we have a refresh token
     if (refreshToken) {
       const refreshResponse = await fetch(`${request.nextUrl.origin}/api/auth/refresh`, {
         method: 'POST',
@@ -42,7 +37,6 @@ export async function middleware(request: NextRequest) {
         const data = await refreshResponse.json();
         const response = NextResponse.next();
         
-        // Set new tokens
         const isProduction = process.env.NODE_ENV === 'production';
         const cookieOptions = {
           httpOnly: true,
@@ -64,7 +58,6 @@ export async function middleware(request: NextRequest) {
     console.error('Auth middleware error:', error);
   }
   
-  // If we reach here, authentication failed
   return NextResponse.next();
 }
 

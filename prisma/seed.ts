@@ -3,21 +3,20 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Sample data
+  
   const users = [
     {
-      uuid: '8667ba71b85a4004af54457a9734eed7', // Steve's UUID
+      uuid: '8667ba71b85a4004af54457a9734eed7',
       nickname: 'Steve',
       country: 'us',
     },
     {
-      uuid: 'ec561538f3fd461daff5086b22154bce', // Alex's UUID
+      uuid: 'ec561538f3fd461daff5086b22154bce',
       nickname: 'Alex',
       country: 'se',
     },
   ];
 
-  // Seed the database
   for (const user of users) {
     await prisma.userProfile.upsert({
       where: { uuid: user.uuid },

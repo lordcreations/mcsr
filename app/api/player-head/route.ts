@@ -1,4 +1,4 @@
-// app/api/player-head/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       return new Response("UUID is required", { status: 400 });
     }
 
-    // Use the new player head URL
+    
     const playerHeadUrl = `https://starlightskins.lunareclipse.studio/render/head/${uuid}/full`;
 
     const headResponse = await fetch(playerHeadUrl, {
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
         "User-Agent": "MCSR-Brazil-App/1.0",
       },
       next: {
-        revalidate: 86400, // Cache for 24 hours
+        revalidate: 86400, 
       },
     });
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching player head:", error);
 
-    // Return a default head if there's an error
+    
     return NextResponse.redirect(new URL("/default-head.png", request.url));
   }
 }
