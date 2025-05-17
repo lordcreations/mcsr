@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const country = url.searchParams.get("country") || "";
     const state = url.searchParams.get("state") || "";
     
-    let mcsrUrl = "https:
+    let mcsrUrl = "https://mcsrranked.com/api/leaderboard";
     
     if (country === "br") {
       mcsrUrl += "?country=br";
