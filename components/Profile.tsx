@@ -245,7 +245,7 @@ const fetchProfileData = async () => {
                             )}
 
                             <div className="space-y-2">
-                                <Label htmlFor="country" className="font-minecraft">Seleção de cidade</Label>
+                                <Label htmlFor="country" className="font-minecraft">Escolha de cidade</Label>
                                 <Select
                                     value={selectedCountry}
                                     onValueChange={setSelectedCountry}
