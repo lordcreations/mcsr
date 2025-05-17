@@ -23,7 +23,7 @@ export function ProfileStateSelector({ selectedState, onStateChange, disabled = 
           <SelectItem key={state.code} value={state.code}>
             <div className="flex items-center gap-2">
               <Image
-                src={`/flags/states/${state.code.toLowerCase()}.svg`}
+                src={`/flags/states/${state.code.toUpperCase()}.svg`}
                 alt={state.name}
                 width={16}
                 height={12}
