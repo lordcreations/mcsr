@@ -145,6 +145,7 @@ async function processAuthentication(code: string) {
     });
     
     const mcData = await mcResponse.json();
+    console.log(mcData);
     const mcAccessToken = mcData.access_token;
 
     // Get Minecraft profile
