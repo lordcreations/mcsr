@@ -52,64 +52,66 @@ export default function Home() {
 
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    // First fetch the players from MCSR API
-    fetch("https://mcsrranked.com/api/leaderboard?country=br")
-      .then((res) => res.json())
-      .then(async (data) => {
-        const initialPlayers = (data.data?.users || [])
-          .filter((u: Player) => u.seasonResult)
-          .sort(
-            (a: Player, b: Player) =>
-              a.seasonResult.eloRank - b.seasonResult.eloRank
-          )
-          .map((player: any) => ({
-            ...player,
-            animationPhase: Math.random() * -3,
-          }));
+useEffect(() => {
+  // First fetch the players from MCSR API
+  fetch("https://mcsrranked.com/api/leaderboard?country=br")
+    .then((res) => res.json())
+    .then(async (data) => {
+      const initialPlayers = (data.data?.users || [])
+        .filter((u: Player) => u.seasonResult)
+        .sort(
+          (a: Player, b: Player) =>
+            a.seasonResult.eloRank - b.seasonResult.eloRank
+        )
+        .map((player: any) => ({
+          ...player,
+          animationPhase: Math.random() * -3,
+        }));
 
-        // Get all player UUIDs
-        const playerUuids = initialPlayers.map((p: Player) => p.uuid);
+      // Get all player UUIDs
+      const playerUuids = initialPlayers.map((p: Player) => p.uuid);
 
-        // Now check which players exist in our DB
-        try {
-          // Create a batched query to avoid too many requests
-          const chunks = [];
-          const chunkSize = 30; // Check 30 players at a time
+      try {
+        const chunks = [];
+        const chunkSize = 30;
 
-          for (let i = 0; i < playerUuids.length; i += chunkSize) {
-            chunks.push(playerUuids.slice(i, i + chunkSize));
-          }
-
-          // Process each chunk
-          for (const chunk of chunks) {
-            const queryParams = new URLSearchParams();
-            chunk.forEach((uuid: string) => queryParams.append("uuids", uuid));
-
-            const localPlayersResponse = await fetch(
-              `/api/users/check-profiles?${queryParams}`
-            );
-
-            if (localPlayersResponse.ok) {
-              const localPlayersData = await localPlayersResponse.json();
-
-              // Mark players that exist in our database
-              initialPlayers.forEach((player: Player) => {
-                player.hasLocalProfile = localPlayersData.profiles.includes(
-                  player.uuid
-                );
-              });
-            }
-          }
-        } catch (error) {
-          console.error("Error checking local profiles:", error);
+        for (let i = 0; i < playerUuids.length; i += chunkSize) {
+          chunks.push(playerUuids.slice(i, i + chunkSize));
         }
 
-        // Now set the players with the local profile info
-        setPlayers(initialPlayers);
-        setLoading(false);
-      });
-  }, []);
+        for (const chunk of chunks) {
+          const queryParams = new URLSearchParams();
+          chunk.forEach((uuid: string) => queryParams.append("uuids", uuid));
+
+          const localPlayersResponse = await fetch(
+            `/api/users/check-profiles?${queryParams}`
+          );
+
+          if (localPlayersResponse.ok) {
+            const localPlayersData = await localPlayersResponse.json();
+
+            initialPlayers.forEach((player: Player) => {
+const match = localPlayersData.profiles.find(
+  (p: any) => p.uuid === player.uuid
+);
+
+if (match) {
+  player.hasLocalProfile = true;
+  player.country = match.country ?? player.country;
+}
+
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error checking local profiles:", error);
+      }
+
+      setPlayers(initialPlayers);
+      setLoading(false);
+    });
+}, []);
+
 
   const toggleDarkMode = () => {
     setTheme(theme === "dark" ? "light" : "dark");
