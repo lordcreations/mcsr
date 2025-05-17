@@ -66,7 +66,11 @@ export async function POST(req: NextRequest) {
 
 // Extract the common authentication logic to a shared function
 async function processAuthentication(code: string, req: NextRequest) {
-  const origin = req.headers.get("origin") || `https://${req.headers.get("host")}` || "https://mcsr.vercel.app";
+  // if development mode, use localhost
+  const origin = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://mcsr.vercel.app";
+  // if production mode, use the production URL
+
+  // const origin = req.headers.get("origin") || `https://${req.headers.get("host")}` || "https://mcsr.vercel.app";
   try {
     // Exchange code for token
     const tokenResponse = await fetch("https://login.live.com/oauth20_token.srf", {
