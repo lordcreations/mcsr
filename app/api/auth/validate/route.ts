@@ -22,7 +22,7 @@ export const GET = async (request: NextRequest) => {
     }
     
     // Validate with Minecraft API
-    const profileResponse = await fetch("https://api.minecraftservices.com/minecraft/profile", {
+    const profileResponse = await fetch("https://vex.minecraftservices.com/minecraft/profile", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${authToken}`,

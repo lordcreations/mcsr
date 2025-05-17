@@ -87,7 +87,7 @@ async function processAuthentication(code: string, redirectUri: string) {
     const agent = new HttpsProxyAgent(proxy);
 
     const minecraftApi = axios.create({
-    baseURL: "https://api.minecraftservices.com",
+    baseURL: "https://vex.minecraftservices.com",
     httpsAgent: agent,
     });
     // request to Ipfy to test the proxy
