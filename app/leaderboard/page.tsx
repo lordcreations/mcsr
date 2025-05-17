@@ -163,7 +163,7 @@ export default function Home() {
                     BRAZIL
                   </span>
                 </div>
-                <h1 className="font-minecraft sm:text-4xl text-white dark:text-black text-4xl bg-gray-900 dark:bg-white rounded shadow w-fit h-[60px] flex items-center justify-center px-6 leading-none">
+                <h1 className="pb-2 font-minecraft sm:text-4xl text-white dark:text-black text-4xl bg-gray-900 dark:bg-white rounded shadow w-fit h-[60px] flex items-center justify-center px-6 leading-none">
                   LEADERBOARD
                 </h1>
               </div>
