@@ -196,7 +196,7 @@ const fetchProfileData = async () => {
                             <div className="mt-2 flex items-center justify-center sm:justify-start gap-2">
                                 <div className="flex items-center">
                                     <Image
-                                        src={`/flags/${profileData?.country || 'unknown'}.svg`}
+                                        src={`/flags/${profileData?.country.toUpperCase() || 'unknown'}.svg`}
                                         alt="city flag"
                                         width={20}
                                         height={20}
