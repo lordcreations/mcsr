@@ -287,8 +287,9 @@ export default function Home() {
                       >
                         <div className="flex items-center gap-3">
                           {}
+                          {/* rank */}
                           <span className="font-chat mt-4 text-sm w-8 text-center font-bold text-gray-500 dark:text-gray-400">
-                            {player.seasonResult.eloRank}
+                            {idx + 4}
                           </span>
 
                           {}
