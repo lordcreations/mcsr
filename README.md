@@ -13,9 +13,7 @@ A modern, responsive web leaderboard for Minecraft players featuring:
 ## ✨ Features
 
 * Fetches real-time player data from the [MCSR Ranked API](https://mcsrranked.com/)
-* Players sorted by Elo ranking
 * Player dialog modal with additional info and tabs
-* Country flag display next to usernames
 * Microsoft OAuth login with secure token handling
 * Customizable UI with Tailwind CSS
 * Dark/light theme toggle
