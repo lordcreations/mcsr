@@ -98,7 +98,7 @@ export default function PlayerDialog({
                     {
                       icon: "🗓️",
                       label: "Ultimo Login",
-                      value: validDate(data?.data?.timestamp?.lastLogin),
+                      value: validDate(data?.data?.timestamp?.lastOnline),
                     },
                     {
                       icon: "🎯",
