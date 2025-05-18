@@ -132,7 +132,7 @@ export default function Home() {
                     RANKING
                   </h1>
                   <Image
-                    src="/flags/br.svg"
+                    src="/flags/BR.svg"
                     alt="BR Flag"
                     width={32}
                     height={32}

@@ -31,7 +31,7 @@ export function ProfileStateSelector({ selectedState, onStateChange, disabled = 
                 onError={(e) => {
                   
                   if (state.code !== "unknown") {
-                    (e.target as HTMLImageElement).src = "/flags/br.svg";
+                    (e.target as HTMLImageElement).src = "/flags/BR.svg";
                   } else {
                     (e.target as HTMLImageElement).src = "/flags/unknown.svg";
                   }
