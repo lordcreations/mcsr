@@ -77,8 +77,8 @@ export default function PlayerDialog({
               <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm space-y-4">
                 <div className="flex items-center gap-2">
                   <Image
-                    src={`/flags/${player?.country}.svg`}
-                    alt="Country"
+                    src={`/flags/${player?.country.toUpperCase()}.svg`}
+                    alt="City"
                     width={24}
                     height={24}
                     className="rounded shadow"
