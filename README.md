@@ -3,7 +3,7 @@
 A modern, responsive web leaderboard for Minecraft players featuring:
 
 * 🏆 Player Elo Rankings
-* 🗺️ Country Flags
+* 🗺️ Regional Flags
 * 🔒 Microsoft OAuth Authentication
 * 🌓 Light/Dark Theme Support
 * 📱 Fully Responsive for Mobile and Desktop
