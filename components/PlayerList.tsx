@@ -58,9 +58,9 @@ export default function PlayerList({
             className="flex items-center justify-between gap-3 py-3 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded group relative"
           >
             <div className="flex items-center gap-3">
-              <span className="font-chat mt-4 text-sm w-8 text-center font-bold text-gray-500 dark:text-gray-400">
-                {player.seasonResult.eloRank}
-              </span>
+                <span className="font-chat mt-4 text-sm w-8 text-center font-bold text-gray-500 dark:text-gray-400">
+                {idx + 4}
+                </span>
               <div className="flex items-center gap-2">
                 <Image
                   src={`/api/player-head?uuid=${player.uuid}`}
