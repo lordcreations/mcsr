@@ -47,7 +47,7 @@ useEffect(() => {
     }
 
     currentIndex++;
-  }, 100);
+  }, 30);
 
   return () => clearInterval(intervalId);
 }, [title, isActive, played]);
