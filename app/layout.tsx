@@ -43,8 +43,14 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Suspense fallback={<div>Loading auth...</div>}>
             <MicrosoftAuthProvider>
-              <Navbar />
-              {children}
+              <div className="flex flex-col h-full">
+                <Navbar />
+                {/* Page content scrolls */}
+                <div className="flex-1 overflow-y-auto">
+                  {children}
+                </div>
+              </div>
+
               <SpeedInsights />
               <Toaster />
               <Analytics />

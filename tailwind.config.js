@@ -1,4 +1,3 @@
-// tailwind.config.js
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
@@ -7,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        minecraft: ['Minecraft', 'sans-serif'], // <== Key line
+        minecraft: ['Minecraft', 'sans-serif'],
       },
     },
   },

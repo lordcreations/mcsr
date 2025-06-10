@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,11 +9,24 @@ datasource db {
 
 model UserProfile {
   id        String   @id @default(cuid())
-  uuid      String   @unique // Minecraft UUID
+  uuid      String   @unique
   nickname  String
   country   String   @default("unknown")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("user_profiles")
+}
+
+model RsgPlays {
+  id            String   @id @default(cuid())
+  nickname      String
+  videoUrl      String?
+  verified      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  time          Float
+  userProfileId String?
+
+  @@map("rsg_plays")
 }
