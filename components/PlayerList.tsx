@@ -96,7 +96,8 @@ export default function PlayerList({
               <span className="bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 py-1 rounded shadow pt-3">
                 {formatScore(player.seasonResult.eloRate)}
               </span>
-              {player.videoUrl && (
+            {/* windows wild life video its actually a placeholder...*/}
+            {player.videoUrl && !player.videoUrl.includes("youtu.be/a3ICNMQW7Ok") && (
                 <a
                   href={player.videoUrl}
                   target="_blank"

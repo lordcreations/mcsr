@@ -126,8 +126,8 @@ export default function TopThreePlayers({
             <span className="absolute bottom-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-black font-chat text-sm px-2 rounded shadow pt-3">
               {formatScore(player.seasonResult.eloRate)}
             </span>
-
-            {player.videoUrl && (
+            {/* windows wild life video its actually a placeholder...*/}
+            {player.videoUrl && !player.videoUrl.includes("youtu.be/a3ICNMQW7Ok") && (
               <a
                 href={player.videoUrl}
                 target="_blank"
