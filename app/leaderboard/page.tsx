@@ -29,7 +29,7 @@ export default function LeaderboardTabsPage() {
     setCount(snapList.length);
 
     const category = searchParams.get("category")?.toUpperCase() || "RANKED"
-    const initialIndex = category === "RSG" ? 1 : 0;
+    const initialIndex = category === "RSG" ? 1 : category === "ranked" ? 2 : 3;
 
     api.scrollTo(initialIndex);
     setCurrent(initialIndex + 1);
@@ -60,6 +60,9 @@ export default function LeaderboardTabsPage() {
             </CarouselItem>
             <CarouselItem className="flex flex-col items-center justify-center w-full">
               <LeaderboardRSG isActive={current === 2} />
+            </CarouselItem>
+            <CarouselItem className="flex flex-col items-center justify-center w-full">
+              {/*  */}
             </CarouselItem>
           </CarouselContent>
           <CarouselPrevious />

@@ -59,7 +59,7 @@ export function Navbar() {
       options: [
         { name: "Ranked", href: "/leaderboard?category=ranked" },
         { name: "RSG", href: "/leaderboard?category=RSG" },
-        { name: "Estados", href: "/leaderboard/casual" },
+        { name: "Estados", href: "/leaderboard?category=estados" },
       ],
     },
     { name: "Torneios", href: "/tournaments" },

@@ -83,15 +83,15 @@ export default function PlayerList({
                   }
                 />
                 <div className="flex items-center gap-2">
-<span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem] truncate">
-  {(() => {
-    const name = player.nickname;
-    const maxChars = 10;
-    return isMobile && name.length > maxChars
-      ? name.slice(0, maxChars - 3) + "..."
-      : name;
-  })()}
-</span>
+                  <span className="font-chat text-base tracking-wide text-black dark:text-white relative top-[0.25rem] sm:top-[0.5rem] truncate">
+                    {(() => {
+                      const name = player.nickname;
+                      const maxChars = 10;
+                      return isMobile && name.length > maxChars
+                        ? name.slice(0, maxChars - 3) + "..."
+                        : name;
+                    })()}
+                  </span>
                   {player.hasLocalProfile &&
                     player.country.toLowerCase() !== "br" && (
                       <Image
