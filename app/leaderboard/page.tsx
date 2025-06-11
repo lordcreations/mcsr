@@ -28,7 +28,7 @@ export default function LeaderboardTabsPage() {
     const snapList = api.scrollSnapList();
     setCount(snapList.length);
 
-    const category = searchParams.get("category");
+    const category = searchParams.get("category")?.toUpperCase() || "RANKED"
     const initialIndex = category === "RSG" ? 1 : 0;
 
     api.scrollTo(initialIndex);

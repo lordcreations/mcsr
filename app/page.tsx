@@ -25,24 +25,25 @@ export default function Home() {
             className="mb-8"
             style={{ imageRendering: "pixelated" }}
           />
-          
+
           <h1 className="font-minecraft text-4xl sm:text-5xl font-bold mb-6">
             MCSR Brazil
           </h1>
-          
+
           <p className="text-lg mb-8 opacity-90 max-w-md font-chat">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry.
           </p>
-          
+
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link 
+            <Link
               href="/leaderboard"
               className="font-minecraft px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition-all hover:scale-105"
             >
               VER RANKING
             </Link>
-            
-            <Link 
+
+            <Link
               href="/tournaments"
               className="font-minecraft px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg shadow transition-all hover:scale-105"
             >
