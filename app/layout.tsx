@@ -17,8 +17,9 @@ const firaMono = Fira_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MCSR Brazil",
-  description: "Ranked Leaderboard for MCSR Brazil",
+  title: "Minecraft Speedrunning Brasil",
+  description:
+    "Plataforma brasileira de speedrun em Minecraft com rankings atualizados, recordes nacionais e perfil dos jogadores. Descubra os melhores tempos, participe da comunidade e acompanhe as competições de speedrun no Brasil.",
   icons: {
     icon: "/image.png",
     shortcut: "/image.png",
@@ -37,6 +38,39 @@ export default function RootLayout({
         <link
           href="https://fonts.cdnfonts.com/css/minecraft-4"
           rel="stylesheet"
+        />
+
+        <meta name="title" content="Minecraft Speedrunning Brasil" />
+        <meta
+          name="description"
+          content="Plataforma brasileira de speedrun em Minecraft com rankings atualizados, recordes nacionais e perfil dos jogadores. Descubra os melhores tempos, participe da comunidade e acompanhe as competições de speedrun no Brasil."
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mcsrbr.com/" />
+        <meta property="og:title" content="Minecraft Speedrunning Brasil" />
+        <meta
+          property="og:description"
+          content="Plataforma brasileira de speedrun em Minecraft com rankings atualizados, recordes nacionais e perfil dos jogadores. Descubra os melhores tempos, participe da comunidade e acompanhe as competições de speedrun no Brasil."
+        />
+        <meta
+          property="og:image"
+          content="https://www.mcsrbr.com/og-image.png?v=1"
+        />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.mcsrbr.com/" />
+        <meta
+          property="twitter:title"
+          content="Minecraft Speedrunning Brasil"
+        />
+        <meta
+          property="twitter:description"
+          content="Plataforma brasileira de speedrun em Minecraft com rankings atualizados, recordes nacionais e perfil dos jogadores. Descubra os melhores tempos, participe da comunidade e acompanhe as competições de speedrun no Brasil."
+        />
+        <meta
+          property="twitter:image"
+          content="https://www.mcsrbr.com/og-image.png?v=1"
         />
       </head>
       <body className={`${firaMono.variable} antialiased`}>
