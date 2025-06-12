@@ -45,10 +45,7 @@ export default function RootLayout({
             <MicrosoftAuthProvider>
               <div className="flex flex-col h-full">
                 <Navbar />
-                {/* Page content scrolls */}
-                <div className="flex-1 overflow-y-auto">
-                  {children}
-                </div>
+                <div className="flex-1 overflow-y-auto">{children}</div>
               </div>
 
               <SpeedInsights />

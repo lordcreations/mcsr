@@ -151,7 +151,9 @@ export default function LeaderboardRSG({ isActive }: { isActive?: boolean }) {
               setDialogOpen={setDialogOpen}
               setLoadedImages={setLoadedImages}
             />
-            <SearchBar search={search} setSearch={setSearch} />
+            <div className="hidden sm:block w-full mb-4">
+              <SearchBar search={search} setSearch={setSearch} />
+            </div>
             <PlayerList
               scoreType="time"
               players={topPlayers.slice(3)}

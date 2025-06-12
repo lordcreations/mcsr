@@ -7,7 +7,6 @@ html, body, #__next {
   padding: 0;
 }
 
-
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 10px;
@@ -49,7 +48,6 @@ html, body, #__next {
   animation: float 3s ease-in-out infinite;
 }
 
-
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -74,7 +72,6 @@ html, body, #__next {
     transform: scale(1.05);
 }
 
-
 @font-face {
   font-family: 'Minecraftia';
   src: url('/fonts/Minecraftia-Regular.ttf') format('truetype');
@@ -82,11 +79,9 @@ html, body, #__next {
   font-style: normal;
 }
 
-
 .font-chat {
   font-family: 'Minecraftia', sans-serif;
 }
-
 
 @layer utilities {
   @keyframes fade-in-up {
@@ -104,7 +99,6 @@ html, body, #__next {
     animation: fade-in-up 0.4s ease-out forwards;
   }
 }
-
 
 @custom-variant dark (&:is(.dark *));
 

@@ -114,7 +114,9 @@ export default function LeaderboardMCSR() {
               setDialogOpen={setDialogOpen}
               setLoadedImages={setLoadedImages}
             />
-            <SearchBar search={search} setSearch={setSearch} />
+            <div className="hidden sm:block w-full mb-4">
+              <SearchBar search={search} setSearch={setSearch} />
+            </div>
             <PlayerList
               players={players.slice(3)}
               search={search}
