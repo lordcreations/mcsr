@@ -39,6 +39,7 @@ const typedGeoJSON = brazilGeoJSON as unknown as GeoJSONData;
 const maxPlayerCount = Math.max(...mockStatePlayerCounts.map(s => s.playerCount));
 
 // ISSO AQUI EH DE TESTE USANDO o mockStateData!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO: MUDARRRRRRRRRRR
 const stateColorMapping: Record<string, string> = mockStatePlayerCounts.reduce((acc, state: StatePlayerCount) => {
   acc[state.stateCode] = getColorForPlayerCount(state.playerCount, maxPlayerCount);
   return acc;
