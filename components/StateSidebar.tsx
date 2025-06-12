@@ -1,11 +1,11 @@
 'use client';
 
-export const StateSidebar = () => {
+export const StateSidebar = ({ selectedStateName }: { selectedStateName: string }) => {
   return (
     <div className="w-90 bg-gray-800 text-white p-4">
           <div className="space-y-6">
             <div className="flex justify-center items-center text-3xl font-bold">
-              <p className="text-4xl font-bold text-center" id="estado">Brasil</p>
+              <p className="text-4xl font-bold text-center" id="estado">{selectedStateName}</p>
             </div>
   
             <div className="space-y-4">

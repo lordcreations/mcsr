@@ -1,19 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4maps from '@amcharts/amcharts4/maps';
 
-// Define type for polygon data context
-interface PolygonDataContext extends GeoJSONProperties {
-  playerCount?: number;
-}
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import brazilGeoJSON from '@/public/maps/brazilLow.json';
 import { mockStatePlayerCounts, StatePlayerCount } from '@/lib/mockStateData';
-import { colorPalette, getColorForPlayerCount } from '@/lib/colorPalette';
+import { getColorForPlayerCount } from '@/lib/colorPalette';
 
-// Type assertion for the polygon data item
 declare module '@amcharts/amcharts4/maps' {
   interface MapPolygon {
     dataItem: any;
@@ -43,28 +38,30 @@ const typedGeoJSON = brazilGeoJSON as unknown as GeoJSONData;
 
 const maxPlayerCount = Math.max(...mockStatePlayerCounts.map(s => s.playerCount));
 
-// Create color mapping using the new palette
+// ISSO AQUI EH DE TESTE USANDO o mockStateData!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const stateColorMapping: Record<string, string> = mockStatePlayerCounts.reduce((acc, state: StatePlayerCount) => {
   acc[state.stateCode] = getColorForPlayerCount(state.playerCount, maxPlayerCount);
   return acc;
 }, {} as Record<string, string>);
 
-export default function BrazilMap() {
+interface BrazilMapProps {
+  selectedStateName: string;
+  setSelectedStateName: (name: string) => void;
+}
+
+export default function BrazilMap({ selectedStateName, setSelectedStateName }: BrazilMapProps) {
   const chartRef = useRef<am4maps.MapChart | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedStateName, setSelectedStateName] = useState<string>('Nenhum estado selecionado');
-  const [selectedCategory, setSelectedCategory] = useState<string>('1.16rsg');
-  const [warningVisible, setWarningVisible] = useState<boolean>(true);
 
   const updateStateData = useCallback(() => {
-    console.log(`Getting data for state: ${selectedStateName} and category: ${selectedCategory}`);
-  }, [selectedStateName, selectedCategory]);
+    console.log(`Getting data for state: ${selectedStateName}`);
+    
+  }, [selectedStateName]);
 
   useEffect(() => {
-    if (selectedStateName !== 'Nenhum estado selecionado' || selectedCategory !== '1.16rsg') {
+    if (selectedStateName !== 'Brasil') {
       updateStateData();
     }
-  }, [selectedStateName, selectedCategory, updateStateData]);
+  }, [selectedStateName, updateStateData]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -136,7 +133,6 @@ export default function BrazilMap() {
 
     } catch (e: any) {
       console.error('Error initializing map:', e);
-      setError('Não foi possível carregar o mapa.');
     }
 
     return () => {
