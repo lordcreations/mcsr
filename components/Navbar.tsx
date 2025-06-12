@@ -21,11 +21,8 @@ import {
 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Separator } from "@/components/ui/separator";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-// import { useAuth } from "./MicrosoftAuthProvider";
 import Image from "next/image";
 import Profile from "./Profile";
 import {
@@ -45,7 +42,6 @@ export function Navbar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // const { user, loading, login, logout, isAuthenticated } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const searchParams = useSearchParams();
