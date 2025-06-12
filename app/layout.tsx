@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "next-themes";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 
 const firaMono = Fira_Mono({
   variable: "--font-fira-mono",
@@ -75,7 +76,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex flex-col h-full">
             <Navbar />
-            <div className="flex-1 overflow-y-auto">{children}</div>
+            <Suspense fallback={<div className="p-4">Carregando...</div>}>
+              <div className="flex-1 overflow-y-auto">{children}</div>
+            </Suspense>
           </div>
 
           <SpeedInsights />
