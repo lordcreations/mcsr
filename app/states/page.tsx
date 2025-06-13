@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes';
 
 export default function HomePage() {
   const [selectedStateName, setSelectedStateName] = useState<string>('Brasil');
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
