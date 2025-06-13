@@ -1,35 +1,58 @@
+import { mockRuns } from './mockRuns';
+
 export type StatePlayerCount = {
   stateCode: string;
   playerCount: number;
 };
 
-// Mock data representing player counts per state
-export const mockStatePlayerCounts: StatePlayerCount[] = [
-  { stateCode: "BR-SP", playerCount: 20 }, // São Paulo
-  { stateCode: "BR-RJ", playerCount: 10 },  // Rio de Janeiro
-  { stateCode: "BR-MG", playerCount: 6 },  // Minas Gerais
-  { stateCode: "BR-BA", playerCount: 2 },  // Bahia
-  { stateCode: "BR-PR", playerCount: 4 },  // Paraná
-  { stateCode: "BR-RS", playerCount: 8 },  // Rio Grande do Sul
-  { stateCode: "BR-SC", playerCount: 3 },  // Santa Catarina
-  { stateCode: "BR-PE", playerCount: 2 },  // Pernambuco
-  { stateCode: "BR-ES", playerCount: 1 },  // Espírito Santo
-  { stateCode: "BR-DF", playerCount: 2 },  // Distrito Federal
-  { stateCode: "BR-GO", playerCount: 2 },  // Goiás
-  { stateCode: "BR-MT", playerCount: 1 },  // Mato Grosso
-  { stateCode: "BR-MS", playerCount: 1 },  // Mato Grosso do Sul
-  { stateCode: "BR-AM", playerCount: 0 },  // Amazonas
-  { stateCode: "BR-PA", playerCount: 1 },   // Pará
-  { stateCode: "BR-CE", playerCount: 0 },   // Ceará
-  { stateCode: "BR-MA", playerCount: 0 },   // Maranhão
-  { stateCode: "BR-PI", playerCount: 1 },   // Piauí
-  { stateCode: "BR-AC", playerCount: 1 },   // Acre
-  { stateCode: "BR-AL", playerCount: 0 },   // Alagoas
-  { stateCode: "BR-AP", playerCount: 0 },   // Amapá
-  { stateCode: "BR-RO", playerCount: 0 },   // Rondônia
-  { stateCode: "BR-RR", playerCount: 1 },   // Roraima
-  { stateCode: "BR-RN", playerCount: 2 },   // Rio Grande do Norte
-  { stateCode: "BR-PB", playerCount: 2 },   // Paraíba
-  { stateCode: "BR-SE", playerCount: 1 },   // Sergipe
-  { stateCode: "BR-TO", playerCount: 0 }    // Tocantins
-];
+// ApenasK
+const stateCodeToName: Record<string, string> = {
+  'BR-AC': 'Acre', 'BR-AL': 'Alagoas', 'BR-AP': 'Amapá', 'BR-AM': 'Amazonas',
+  'BR-BA': 'Bahia', 'BR-CE': 'Ceará', 'BR-DF': 'Distrito Federal', 'BR-ES': 'Espírito Santo',
+  'BR-GO': 'Goiás', 'BR-MA': 'Maranhão', 'BR-MT': 'Mato Grosso', 'BR-MS': 'Mato Grosso do Sul',
+  'BR-MG': 'Minas Gerais', 'BR-PA': 'Pará', 'BR-PB': 'Paraíba', 'BR-PR': 'Paraná',
+  'BR-PE': 'Pernambuco', 'BR-PI': 'Piauí', 'BR-RJ': 'Rio de Janeiro', 'BR-RN': 'Rio Grande do Norte',
+  'BR-RS': 'Rio Grande do Sul', 'BR-RO': 'Rondônia', 'BR-RR': 'Roraima', 'BR-SC': 'Santa Catarina',
+  'BR-SP': 'São Paulo', 'BR-SE': 'Sergipe', 'BR-TO': 'Tocantins'
+};
+
+const stateAbbrToCode: Record<string, string> = {
+  'AC': 'BR-AC', 'AL': 'BR-AL', 'AP': 'BR-AP', 'AM': 'BR-AM', 'BA': 'BR-BA',
+  'CE': 'BR-CE', 'DF': 'BR-DF', 'ES': 'BR-ES', 'GO': 'BR-GO', 'MA': 'BR-MA',
+  'MT': 'BR-MT', 'MS': 'BR-MS', 'MG': 'BR-MG', 'PA': 'BR-PA', 'PB': 'BR-PB',
+  'PR': 'BR-PR', 'PE': 'BR-PE', 'PI': 'BR-PI', 'RJ': 'BR-RJ', 'RN': 'BR-RN',
+  'RS': 'BR-RS', 'RO': 'BR-RO', 'RR': 'BR-RR', 'SC': 'BR-SC', 'SP': 'BR-SP',
+  'SE': 'BR-SE', 'TO': 'BR-TO'
+};
+
+// size of unique runs set per state
+const countPlayersPerState = (): Record<string, number> => {
+  const playerCounts: Record<string, Set<string>> = {};
+  
+  mockRuns.forEach(run => {
+    const stateCode = stateAbbrToCode[run.state];
+    if (!stateCode) return;
+    
+    if (!playerCounts[stateCode]) {
+      playerCounts[stateCode] = new Set();
+    }
+    playerCounts[stateCode].add(run.playerName);
+  });
+  
+  const result: Record<string, number> = {};
+  Object.entries(playerCounts).forEach(([stateCode, players]) => {
+    result[stateCode] = players.size;
+  });
+  
+  return result;
+};
+
+// Generate 
+const playerCounts = countPlayersPerState();
+
+export const mockStatePlayerCounts: StatePlayerCount[] = Object.entries(stateCodeToName)
+  .map(([stateCode]) => ({
+    stateCode,
+    playerCount: playerCounts[stateCode] || 0,
+  }))
+  .sort((a, b) => b.playerCount - a.playerCount || a.stateCode.localeCompare(b.stateCode));
