@@ -4,8 +4,6 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "next-themes";
-
-import { MicrosoftAuthProvider } from "@/components/MicrosoftAuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 
@@ -42,18 +40,7 @@ export default function RootLayout({
       <body className={`${firaMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Suspense fallback={<div>Loading auth...</div>}>
-            <MicrosoftAuthProvider>
-              <div className="flex flex-col h-full">
-                {/* Page content scrolls */}
-                <div className="flex-1 overflow-y-auto">
-                  {children}
-                </div>
-              </div>
-
-              <SpeedInsights />
-              <Toaster />
-              <Analytics />
-            </MicrosoftAuthProvider>
+            {children}
           </Suspense>
         </ThemeProvider>
       </body>
