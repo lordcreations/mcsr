@@ -28,8 +28,13 @@ export default function LeaderboardTabsPage() {
     const snapList = api.scrollSnapList();
     setCount(snapList.length);
 
-    const category = searchParams.get("category")?.toUpperCase() || "RANKED"
-    const initialIndex = category === "RSG" ? 1 : category === "ranked" ? 2 : 3;
+    const category = searchParams.get("category")?.toUpperCase() || "RANKED";
+    
+    const categoryNames = ["RANKED", "RSG", "ESTADOS"];
+    const initialIndex = categoryNames.findIndex(
+      (name) => name === category
+    );
+
 
     api.scrollTo(initialIndex);
     setCurrent(initialIndex + 1);
