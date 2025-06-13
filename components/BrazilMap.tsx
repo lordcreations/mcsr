@@ -6,7 +6,7 @@ import * as am4maps from '@amcharts/amcharts4/maps';
 
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import brazilGeoJSON from '@/public/maps/brazilLow.json';
-import { mockStatePlayerCounts, StatePlayerCount } from '@/lib/mockStateData';
+import { mockStatePlayerCounts, StatePlayerCount } from '@/lib/stateColor';
 import { getColorForPlayerCount } from '@/lib/colorPalette';
 
 declare module '@amcharts/amcharts4/maps' {
@@ -38,8 +38,7 @@ const typedGeoJSON = brazilGeoJSON as unknown as GeoJSONData;
 
 const maxPlayerCount = Math.max(...mockStatePlayerCounts.map(s => s.playerCount));
 
-// ISSO AQUI EH DE TESTE USANDO o mockStateData!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// TODO: MUDARRRRRRRRRRR
+// Pinta os estados baseado no mockRuns
 const stateColorMapping: Record<string, string> = mockStatePlayerCounts.reduce((acc, state: StatePlayerCount) => {
   acc[state.stateCode] = getColorForPlayerCount(state.playerCount, maxPlayerCount);
   return acc;
