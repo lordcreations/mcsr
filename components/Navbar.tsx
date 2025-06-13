@@ -14,18 +14,15 @@ import {
   MoonIcon,
   SunIcon,
   MenuIcon,
-  LogOutIcon,
   ChevronDownIcon,
-  UserCogIcon,
   ChevronUpIcon,
+  UserCogIcon,
+  LogOutIcon,
 } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
 
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Separator } from "@/components/ui/separator";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
-// import { useAuth } from "./MicrosoftAuthProvider";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Profile from "./Profile";
 import {
@@ -41,15 +38,80 @@ type NavItem = {
   options?: { name: string; href: string }[];
 };
 
+function MobileMenu({ navItems }: { navItems: NavItem[] }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  return (
+    <DropdownMenuContent align="end" className="w-48 p-2 bg-white dark:bg-gray-800">
+      {navItems.map((item) =>
+        item.options ? (
+          <div key={item.href} className="w-full">
+            <button
+              onClick={() =>
+                setExpandedItem((prev) => (prev === item.href ? null : item.href))
+              }
+              className={`w-full text-left flex items-center justify-between px-2 py-2 text-sm font-minecraft ${
+                item.options.some((opt) =>
+                  opt.href.includes("category=")
+                    ? opt.href.includes(`category=${category}`)
+                    : pathname === opt.href
+                )
+                  ? "text-white"
+                  : "text-gray-300"
+              } hover:text-white transition`}
+            >
+              {item.name}
+              {expandedItem === item.href ? (
+                <ChevronUpIcon className="h-4 w-4" />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" />
+              )}
+            </button>
+
+            {expandedItem === item.href && (
+              <div className="ml-4">
+                {item.options.map((option) => (
+                  <Link key={option.href} href={option.href}>
+                    <DropdownMenuItem
+                      className={`pl-4 pr-2 py-2 rounded-md font-minecraft text-sm ${
+                        (option.href.includes("category=") &&
+                          option.href.includes(`category=${category}`)) ||
+                        pathname === option.href
+                          ? "bg-blue-600 text-white"
+                          : "text-gray-400 hover:text-white"
+                      }`}
+                    >
+                      {option.name}
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link key={item.href} href={item.href} className="w-full">
+            <DropdownMenuItem
+              className={`p-2 rounded-md font-minecraft text-sm ${
+                pathname === item.href ? "bg-gray-100 dark:bg-gray-700 font-semibold" : ""
+              }`}
+            >
+              {item.name}
+            </DropdownMenuItem>
+          </Link>
+        )
+      )}
+    </DropdownMenuContent>
+  );
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // const { user, loading, login, logout, isAuthenticated } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category");
 
   const navItems: NavItem[] = [
     { name: "Inicio", href: "/" },
@@ -89,12 +151,10 @@ export function Navbar() {
                 style={{ imageRendering: "pixelated" }}
                 className="rounded-sm"
               />
-              {/* hidden  */}
               <div className="hidden md:block">
                 <span className="text-white text-xl tracking-wide drop-shadow-[1px_1px_0px_#000]">
                   MCSR Brasil
                 </span>
-
               </div>
             </Link>
 
@@ -105,24 +165,16 @@ export function Navbar() {
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant={
-                          item.options
-                            ? item.options.some((opt) =>
-                                pathname.startsWith(opt.href)
-                              ) || pathname.startsWith(item.href)
-                              ? "default"
-                              : "ghost"
-                            : pathname === item.href
+                          item.options.some((opt) =>
+                            pathname.startsWith(opt.href)
+                          ) || pathname.startsWith(item.href)
                             ? "default"
                             : "ghost"
                         }
                         className={`uppercase text-sm font-minecraft tracking-wide transition-colors rounded-sm ${
-                          item.options
-                            ? item.options.some((opt) =>
-                                pathname.startsWith(opt.href)
-                              ) || pathname.startsWith(item.href)
-                              ? "bg-blue-600 text-white hover:bg-blue-700"
-                              : "text-gray-400 hover:text-white"
-                            : pathname === item.href
+                          item.options.some((opt) =>
+                            pathname.startsWith(opt.href)
+                          ) || pathname.startsWith(item.href)
                             ? "bg-blue-600 text-white hover:bg-blue-700"
                             : "text-gray-400 hover:text-white"
                         } flex items-center gap-1`}
@@ -187,74 +239,9 @@ export function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                align="end"
-                className="w-48 p-2 bg-white dark:bg-gray-800"
-              >
-                {navItems.map((item) =>
-                  item.options ? (
-                    <div key={item.href} className="w-full">
-                      <button
-                        onClick={() =>
-                          setExpandedItem((prev) =>
-                            prev === item.href ? null : item.href
-                          )
-                        }
-                        className={`w-full text-left flex items-center justify-between px-2 py-2 text-sm font-minecraft ${
-                          item.options.some((opt) =>
-                            opt.href.includes("category=")
-                              ? opt.href.includes(`category=${category}`)
-                              : pathname === opt.href
-                          )
-                            ? "text-white"
-                            : "text-gray-300"
-                        } hover:text-white transition`}
-                      >
-                        {item.name}
-                        {expandedItem === item.href ? (
-                          <ChevronUpIcon className="h-4 w-4" />
-                        ) : (
-                          <ChevronDownIcon className="h-4 w-4" />
-                        )}
-                      </button>
-
-                      {expandedItem === item.href && (
-                        <div className="ml-4">
-                          {item.options.map((option) => (
-                            <Link key={option.href} href={option.href}>
-                              <DropdownMenuItem
-                                className={`pl-4 pr-2 py-2 rounded-md font-minecraft text-sm ${
-                                  (option.href.includes("category=") &&
-                                    option.href.includes(
-                                      `category=${category}`
-                                    )) ||
-                                  pathname === option.href
-                                    ? "bg-blue-600 text-white"
-                                    : "text-gray-400 hover:text-white"
-                                }`}
-                              >
-                                {option.name}
-                              </DropdownMenuItem>
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link key={item.href} href={item.href} className="w-full">
-                      <DropdownMenuItem
-                        className={`p-2 rounded-md font-minecraft text-sm ${
-                          pathname === item.href
-                            ? "bg-gray-100 dark:bg-gray-700 font-semibold"
-                            : ""
-                        }`}
-                      >
-                        {item.name}
-                      </DropdownMenuItem>
-                    </Link>
-                  )
-                )}
-              </DropdownMenuContent>
+              <Suspense fallback={<DropdownMenuContent className="p-4 text-sm">Carregando...</DropdownMenuContent>}>
+                <MobileMenu navItems={navItems} />
+              </Suspense>
             </DropdownMenu>
           </div>
         </div>
