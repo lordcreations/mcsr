@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Fira_Mono } from "next/font/google";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
-import { ThemeProvider } from "next-themes";
-import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 
 const firaMono = Fira_Mono({
@@ -24,26 +20,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function StatesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link
-          href="https://fonts.cdnfonts.com/css/minecraft-4"
-          rel="stylesheet"
-        />
-      </head>
-      <body className={`${firaMono.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Suspense fallback={<div>Loading auth...</div>}>
-            {children}
-          </Suspense>
-        </ThemeProvider>
-      </body>
-    </html>
+    <div className="h-full">
+      <Suspense fallback={<div>Loading...</div>}>
+        {children}
+      </Suspense>
+    </div>
   );
 }
