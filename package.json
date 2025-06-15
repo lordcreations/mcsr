@@ -9,8 +9,7 @@
     "lint": "next lint",
     "prisma": "prisma",
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
-    "strip-comments": "bun strip-comments.js",
-    "postinstall": "npm install --legacy-peer-deps"
+    "strip-comments": "bun strip-comments.js"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.40",
