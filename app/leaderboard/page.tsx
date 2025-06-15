@@ -66,9 +66,6 @@ export default function LeaderboardTabsPage() {
             <CarouselItem className="flex flex-col items-center justify-center w-full">
               <LeaderboardRSG isActive={current === 2} />
             </CarouselItem>
-            <CarouselItem className="flex flex-col items-center justify-center w-full">
-              {/*  */}
-            </CarouselItem>
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
